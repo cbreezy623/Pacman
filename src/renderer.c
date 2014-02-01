@@ -15,6 +15,7 @@ void draw_image_coord_offset(SDL_Surface *surface, int x, int y, int xOffset, in
 
 //Offset the board is off from the top of the screen
 //Needed because some items are stored in board (x,y) coords and need to be rendered at an offset
+#define Y_OFFSET 3
 static int offset = 3 * 16;
 
 
@@ -38,7 +39,7 @@ void draw_image_coord_offset(SDL_Surface *surface, int x, int y, int xOffset, in
 
 void draw_vanity_ghostline(GhostDisplayRow *row, int y, bool drawDescription, bool drawName)
 {
-	draw_image_coord(ghost_image(row->type, Right, 1), 4, y);
+	draw_image_coord(ghost_image(row->type, Right, 0), 4, y);
 
 	if (drawDescription)
 	{
@@ -392,6 +393,23 @@ void draw_pacman_lives(int numLives)
 
 		x += 16 * 2;
 	}
+}
+
+//
+// Ghost rendering
+//
+
+void draw_ghost(Ghost *ghost)
+{
+	SDL_Surface *image = ghost_image(ghost->ghostType, ghost->direction, 0);
+
+	int x = ghost->x;
+	int y = ghost->y + Y_OFFSET;
+
+	int xOffset = ghost->xTileOffset - 6;
+	int yOffset = ghost->yTileOffset - 6;
+
+	draw_image_coord_offset(image, x, y, xOffset, yOffset);
 }
 
 //

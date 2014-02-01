@@ -20,6 +20,6 @@ bool pacman_fruit_collides(Pacman *pacman, GameFruit *fruit)
 bool pacman_ghost_collides(Pacman *pacman, Ghost *ghost)
 {
 	//TODO: make this more accurate
-	return 	pacman->xTileOffset == ghost->xTileOffset && pacman->yTileOffset == ghost->yTileOffset &&
-			pacman->x == ghost->x && pacman->y == ghost->y;
+	return pacman->x == ghost->x && pacman->y == ghost->y; 	
+	//pacman->xTileOffset == ghost->xTileOffset && pacman->yTileOffset == ghost->yTileOffset &&
 }

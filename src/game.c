@@ -163,7 +163,7 @@ void game_render(PacmanGame *game)
 
 			//we also draw pacman and ghosts (they are idle currently though)
 			draw_pacman_static(&game->pacman);
-			//draw_ghosts(&game->ghosts);
+			for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 
 			draw_large_pellets(&game->pelletHolder, false);
 			draw_board(&game->board);
@@ -171,6 +171,8 @@ void game_render(PacmanGame *game)
 		case GamePlayState:
 			draw_large_pellets(&game->pelletHolder, true);
 			draw_board(&game->board);
+
+			for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 
 			if (game->gameFruit1.fruitMode == Displaying) draw_fruit_game(game->currentLevel);
 			if (game->gameFruit2.fruitMode == Displaying) draw_fruit_game(game->currentLevel);
@@ -185,6 +187,7 @@ void game_render(PacmanGame *game)
 
 			if (dt < 2000)
 			{
+				for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 				draw_board(&game->board);
 			}
 			else
@@ -396,7 +399,80 @@ static void process_player(PacmanGame *game)
 
 static void process_ghosts(PacmanGame *game)
 {
+	for (int i = 0; i < 4; i++)
+	{
+		Ghost *g = &game->ghosts[i];
 
+		if (g->movementMode == InPen || g->movementMode == LeavingPen)
+		{
+			//TODO: special modes, will handle later
+			continue;
+		}
+
+		//all other modes can move normally (I think,)
+
+		if (g->xTileOffset == 0 && g->yTileOffset == 0)
+		{
+			//they've hit the center of a tile, so change their current direction to the new direction
+			g->direction = g->transDirection;
+			g->transDirection = g->nextDirection;
+		}
+		
+		int x, y;
+
+		if 		(g->direction == Left) 	{ x = -1; y =  0; }
+		else if (g->direction == Right) { x =  1; y =  0; }
+		else if (g->direction == Up) 	{ x =  0; y = -1; }
+		else 							{ x =  0; y =  1; }
+
+		g->xTileOffset += x;
+		g->yTileOffset += y;
+
+		bool changedTile = false;
+
+		if (g->xTileOffset < -8) 
+		{
+			g->xTileOffset = 7;
+			g->x--;
+
+			changedTile = true;
+
+			//special case of teleport square
+			if (g->x == -1) g->x = 27;
+		} 
+		else if (g->xTileOffset > 7)
+		{
+			g->xTileOffset = -8;
+			g->x++;
+
+			changedTile = true;
+
+			//special case of teleport square
+			if (g->x == 28) g->x = 0;
+		} 
+		else if (g->yTileOffset < -8) 
+		{
+			g->yTileOffset = 7;
+			g->y--;
+
+			changedTile = true;
+		} 
+		else if (g->yTileOffset > 7)
+		{
+			g->yTileOffset = -8;
+			g->y++;
+
+			changedTile = true;
+		}
+
+		if (changedTile)
+		{
+			//if they are in a new tile, rerun their target update logic
+			execute_ghost_logic(g, g->ghostType, &game->ghosts[0], &game->pacman);
+
+			g->nextDirection = next_direction(g, &game->board);
+		}
+	}
 }
 
 static void process_fruit(PacmanGame *game)
@@ -498,14 +574,7 @@ static void check_pacghost_collision(void)
 
 void gamestart_init(PacmanGame *game)
 {
-	//we need to set pacmans position/ lives/ score
-	pacman_init(&game->pacman);
-
-	//we need to reset all the pellets to be enabled
-	pellets_init(&game->pelletHolder);
-
-	//we need to reset all ghosts
-	//ghosts_init();
+	level_init(game);
 
 	//we need to reset all fruit
 	//fuit_init();
@@ -526,12 +595,11 @@ void level_init(PacmanGame *game)
 	pellets_init(&game->pelletHolder);
 
 	//reset ghosts
+	ghosts_init(game->ghosts);
 
 	//reset fruit
 	reset_fruit(&game->gameFruit1);
 	reset_fruit(&game->gameFruit2);
-
-	//ghosts_init();
 }
 
 

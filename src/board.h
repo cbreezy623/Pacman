@@ -22,4 +22,8 @@ typedef struct
 bool is_valid_square(Board *board, int x, int y);
 
 //TODO: decide if this uses the board or not
+//Returns true if the square is a teleport square
 bool is_tele_square(int x, int y);
+
+//Returns true if this is a square in which ghosts cannot move Up to enter in Chase mode
+bool is_ghost_noup_square(int x, int y);

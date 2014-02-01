@@ -25,7 +25,6 @@ typedef struct
 	Board board;
 	PelletHolder pelletHolder;
 	GameFruit gameFruit1, gameFruit2;
-	Ghost redGhost;	// TODO: move this somewhere else
 	int highscore;
 	int currentLevel;
 } PacmanGame;

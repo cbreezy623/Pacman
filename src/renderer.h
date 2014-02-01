@@ -86,7 +86,7 @@ void draw_pacman_lives(int numLives);
 // Ghost rendering
 //
 
-//void draw_ghost();
+void draw_ghost(Ghost *ghost);
 //void draw_scared_ghost();
 //void draw_eyes();
 

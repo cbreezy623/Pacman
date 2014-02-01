@@ -38,8 +38,8 @@ void load_sounds(void)
 
 	levelStart = Mix_LoadWAV("sound/pacintro.wav");
 
-	//set_sound_muted(true);
 	set_sound_volume(0.5);
+	set_sound_muted(true);
 }
 
 void dispose_sounds(void)

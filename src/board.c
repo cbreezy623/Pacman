@@ -17,3 +17,11 @@ bool is_tele_square(int x, int y)
 	else if (x == 28 && y == 14) return true;
 	else return false;
 }
+
+bool is_ghost_noup_square(int x, int y)
+{
+	// (12, 22) (14, 22)
+	// (12, 10) (14, 10)
+	return (x == 12 && y == 22) || (x == 15 && y == 22) ||
+		   (x == 12 && y == 10) || (x == 15 && y == 10);
+}
