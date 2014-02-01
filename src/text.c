@@ -10,9 +10,6 @@ static Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 static void set_fontimage_color(SDL_Surface *image, TextColor color);
 static void replace_pixel(SDL_Surface *image, SDL_Color newColor);
 
-//TODO: read readme below for details.
-int to_argb(int a, int r, int g, int b);
-
 static TextColor textColor;
 
 static SDL_Surface *char_fonts[NUM_FONTS][NUM_CHAR_IMAGES];
@@ -140,24 +137,14 @@ void draw_text(SDL_Surface *surface, const char *text, int x, int y)
 
 void draw_numtext_coord(SDL_Surface *surface, const char *text, int x, int y)
 {
-	//a text square is 2 actual pixels
+	//a text square is 2 actual pixels out of alignment with number squares
+	//do an offset when drawing
 	draw_text(surface, text, x * 16, y * 16 - 2);
 }
 
 void draw_text_coord(SDL_Surface *surface, const char *text, int x, int y)
 {
 	draw_text(surface, text, x * 16, y * 16);
-}
-
-//TODO: either use this or remove it. Made it non-static so there wouldn't be a warning.
-int to_argb(int a, int r, int g, int b)
-{
-	int argb = (a << 24);
-	argb = argb | (r << 16);
-	argb = argb | (g << 8);
-	argb = argb | (b);
-
-	return argb;
 }
 
 static void replace_pixel(SDL_Surface *image, SDL_Color newColor)

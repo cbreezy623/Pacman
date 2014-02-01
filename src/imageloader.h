@@ -30,7 +30,6 @@ typedef enum
 } verthoro_orientation; 
 
 void load_images(void);
-bool loaded_succesfully(void);
 void dispose_images(void);
 
 //Clones the image, creating and returning a new copy

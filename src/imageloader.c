@@ -508,11 +508,6 @@ void dispose_char_images(void)
     SDL_FreeSurface(specImages[6]);
 }
 
-bool loaded_succesfully(void)
-{
-    return true;
-}
-
 SDL_Surface *load_image(const char *filename)
 {
     printf("loading image: %s\n", filename);

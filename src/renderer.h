@@ -9,7 +9,7 @@
 #include "pellet.h"
 #include "text.h"
 
-//Holds data relating to a single rendered ghost-row.0
+//Holds data relating to a single rendered ghost-row.
 typedef struct
 {
 	GhostType  type;

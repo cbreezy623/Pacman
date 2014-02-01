@@ -8,7 +8,7 @@
 
 // Refer to fruitinfo for implementation details
 
-fruit_points(Fruit fruit)
+int fruit_points(Fruit fruit)
 {
 	switch (fruit)
 	{

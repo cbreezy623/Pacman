@@ -1,6 +1,7 @@
 #include "menu.h"
 
 #include <stdbool.h>
+
 #include <SDL/SDL_keysym.h>
 
 #include "input.h"
@@ -35,7 +36,7 @@ void menu_init(MenuSystem *menuSystem)
 void menu_tick(MenuSystem *menuSystem)
 {
 	bool startNew = key_held(SDLK_KP_ENTER) || key_held(SDLK_RETURN);
-	 
+
 	if (startNew)
 	{
 		menuSystem->state = GoToGame;
