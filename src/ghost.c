@@ -1,12 +1,10 @@
+#include "ghost.h"
+
 #include <math.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "ghost.h"
-
-//TODO: remove the default causes from all of the switch statements
-//or make them do something legitimate
 
 void ghosts_init(Ghost ghosts[4])
 {
@@ -96,11 +94,7 @@ Direction next_direction(Ghost *ghost, Board *board)
 	Boardoffset offsets[4] = { {0, -1},       {-1, 0},         {0, 1},          {1, 0} };
 
 	int x, y;
-
-	if 		(ghost->nextDirection == Left) 	{ x = -1; y =  0; }
-	else if (ghost->nextDirection == Right) { x =  1; y =  0; }
-	else if (ghost->nextDirection == Up) 	{ x =  0; y = -1; }
-	else 									{ x =  0; y =  1; }
+	dir_xy(ghost->nextDirection, &x, &y);
 
 	//calculate the distances between the squares (or if it is even valid)
 	for (int i = 0; i < 4; i++)
@@ -125,12 +119,7 @@ Direction next_direction(Ghost *ghost, Board *board)
 	}
 
 	//a ghost can never turn around, so exclude the opposite direction to what they are facing
-	Direction reverseDir;
-
-	if 		(ghost->nextDirection == Left) 	{ reverseDir = Right; }
-	else if (ghost->nextDirection == Right) { reverseDir = Left; }
-	else if (ghost->nextDirection == Up) 	{ reverseDir = Down; }
-	else 									{ reverseDir = Up; }
+	Direction reverseDir = dir_opposite(ghost->nextDirection);
 
 	Targetcalc shortest = {Right, INT_MAX};
 
@@ -175,18 +164,14 @@ void execute_red_logic(Ghost *redGhost, Pacman *pacman)
 void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman)
 {
 	// Pinks's AI is to set his target position to pacmans, plus a few more in the distance
+	int targetOffsetX = 0;
+	int targetOffsetY = 0;
 	
-	int targetOffsetX;
-	int targetOffsetY;
-	
-	switch (pacman->body.dir)
-	{
-		case Up:	{ targetOffsetX =  4; targetOffsetY = -4; } break;	//4 up AND 4 left, as per bug in original game
-		case Down:	{ targetOffsetX =  0; targetOffsetY =  4; } break;
-		case Left:	{ targetOffsetX = -4; targetOffsetY =  0; } break;
-		case Right:	{ targetOffsetX =  4; targetOffsetY =  0; } break;
-		default: printf("error direction\naborting\n"); exit(1);
-	}
+	//use dir_xy_buggy to get 4 up AND 4 left, as per bug in original game
+	dir_xy_buggy(pacman->body.dir, &targetOffsetX, &targetOffsetY);
+
+	targetOffsetX *= 4;
+	targetOffsetY *= 4;
 	
 	pinkGhost->targetX = pacman->body.x + targetOffsetX;
 	pinkGhost->targetY = pacman->body.y + targetOffsetY;
@@ -195,13 +180,13 @@ void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman)
 void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman)
 {
 	// Orange's logic is in two parts:
-	// If Pacmans distance is more than 5 squares away, his target is pacman
-	// If Pacman is within 5 squares, his target is his home
+	// If Pacmans distance is 8 or more squares away, his target is pacman
+	// If Pacman is less than 8 squares, his target is his home
 	
 	int dx = orangeGhost->body.x - pacman->body.x;
 	int dy = orangeGhost->body.y - pacman->body.y;
 	
-	int distance = sqrt(dx * dx + dy * dy);
+	int distance = (int) sqrt(dx * dx + dy * dy);
 
 	if (distance >= 8)
 	{
@@ -215,20 +200,17 @@ void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman)
 
 void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman)
 {
-	int targetOffsetX;
-	int targetOffsetY;
+	int offsetX = 0;
+	int offsetY = 0;
 	
-	switch (pacman->body.dir)
-	{
-		case Up:	{ targetOffsetX =  2; targetOffsetY = -2; } break;	//2 up AND 2 left, as per bug in original game
-		case Down:	{ targetOffsetX =  0; targetOffsetY =  2; } break;
-		case Left:	{ targetOffsetX = -2; targetOffsetY =  0; } break;
-		case Right:	{ targetOffsetX =  2; targetOffsetY =  0; } break;
-		default: printf("error direction\naborting\n"); exit(1);
-	}
+	//use dir_xy_buggy to get 2 up AND 2 left, as per bug in original game
+	dir_xy_buggy(pacman->body.dir, &offsetX, &offsetY);
+
+	offsetX *= 2;
+	offsetY *= 2;
 	
-	int tx = pacman->body.x + targetOffsetX;
-	int ty = pacman->body.y + targetOffsetY;
+	int tx = pacman->body.x + offsetX;
+	int ty = pacman->body.y + offsetY;
 	
 	int rx = redGhost->body.x;
 	int ry = redGhost->body.y;

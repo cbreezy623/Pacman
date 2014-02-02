@@ -96,7 +96,7 @@ static void internal_tick(void)
         case Menu:
             menu_tick(&menuSystem);
             
-            if (menuSystem.state == GoToGame)
+            if (menuSystem.action == GoToGame)
             {
                 state = Game;
                 startgame_init();
@@ -212,6 +212,7 @@ static void key_down_hacks(int keycode)
 
     static bool rateSwitch = false;
 
+    //TODO: remove this hack and try make it work with the physics body
     if (keycode == SDLK_SPACE) SDL_setFramerate(&fpsManager, (rateSwitch = !rateSwitch) ? 200 : 60);
 
     //TODO: move logic into the tick method of the menu
@@ -245,4 +246,34 @@ unsigned int frames_game(void)
 unsigned int frames_startup(void)
 {
     return numTicks;
+}
+
+void dir_xy(Direction dir, int *x, int *y)
+{
+    switch (dir)
+    {
+        case Up:    { *x =  0; *y = -1; break; } 
+        case Down:  { *x =  0; *y =  1; break; }
+        case Left:  { *x = -1; *y =  0; break; }
+        case Right: { *x =  1; *y =  0; break; }
+    }
+}
+
+void dir_xy_buggy(Direction dir, int *x, int *y)
+{
+    switch (dir)
+    {
+        case Up:    { *x = -1; *y = -1; break; } 
+        case Down:  { *x =  0; *y =  1; break; }
+        case Left:  { *x = -1; *y =  0; break; }
+        case Right: { *x =  1; *y =  0; break; }
+    }
+}
+
+Direction dir_opposite(Direction dir)
+{
+    if      (dir == Left)  { return Right; }
+    else if (dir == Right) { return Left; }
+    else if (dir == Up)    { return Down; }
+    else                   { return Up; }
 }

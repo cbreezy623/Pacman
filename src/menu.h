@@ -10,7 +10,7 @@ typedef enum
 //Defines the menu system.
 typedef struct
 {
-	MenuAction state;
+	MenuAction action;
 	unsigned int ticksSinceModeChange;
 } MenuSystem;
 

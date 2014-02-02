@@ -37,3 +37,13 @@ unsigned int ticks_startup(void);
 unsigned int frames_game(void);
 //Returns the number of frames that have happened since the program starting.
 unsigned int frames_startup(void);
+
+//Copies -1, 0, 1 to the given x and y ints depending on what direction is given.
+void dir_xy(Direction dir, int *x, int *y);
+
+//Same behaviour as dir_xy() except this emulates the bug for ghosts where
+//AI based on up direction is both Up *and* Left.
+void dir_xy_buggy(Direction dir, int *x, int *y);
+
+//Returns the opposite direction to the one given.
+Direction dir_opposite(Direction dir);

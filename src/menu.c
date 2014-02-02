@@ -29,7 +29,7 @@ static GhostDisplayRow enemyRows[4] = {
 
 void menu_init(MenuSystem *menuSystem)
 {
-	menuSystem->state = Nothing;
+	menuSystem->action = Nothing;
     menuSystem->ticksSinceModeChange = SDL_GetTicks();
 }
 
@@ -39,7 +39,7 @@ void menu_tick(MenuSystem *menuSystem)
 
 	if (startNew)
 	{
-		menuSystem->state = GoToGame;
+		menuSystem->action = GoToGame;
 	}
 }
 

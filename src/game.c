@@ -293,10 +293,7 @@ bool can_move(Pacman *pacman, Board *board, Direction dir)
 	int x = 0;
 	int y = 0;
 
-	if 		(dir == Left) 	x = -1;
-	else if (dir == Right) 	x =  1;
-	else if (dir == Up) 	y = -1;
-	else 					y =  1;
+	dir_xy(dir, &x, &y);
 
 	int newX = pacman->body.x + x;
 	int newY = pacman->body.y + y;
@@ -352,20 +349,12 @@ static void process_player(PacmanGame *game)
 	}
 	else if (can_move(pacman, board, pacman->body.dir))
 	{
-		//printf("pacman default moving\n");
-		pacman->movementType = Unstuck;
-		//pacman can move pacman in his current direction, so let him
-		if 		(pacman->body.dir == Left) 	{ x = -1; y =  0; }
-		else if (pacman->body.dir == Right) 	{ x =  1; y =  0; }
-		else if (pacman->body.dir == Up) 		{ x =  0; y = -1; }
-		else 									{ x =  0; y =  1; }
+		pacman->movementType = Unstuck;		
 	}
 	else
 	{
-		//printf("pacman stuck\n");
 		pacman->movementType = Stuck;
 		//user hasn't moved in a valid direction or pacman can't move in his default direction
-		//just return
 		return;
 	}
 
