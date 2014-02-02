@@ -1,6 +1,7 @@
+#include "game.h"
+
 #include "animation.h"
 #include "board.h"
-#include "game.h"
 #include "input.h"
 #include "main.h"
 #include "pacman.h"
@@ -14,9 +15,10 @@
 static void process_player(PacmanGame *game);
 static void process_fruit(PacmanGame *game);
 static void process_ghosts(PacmanGame *game);
-static void check_pacghost_collision(void);
-static void check_pellets_collision(PacmanGame *game);
+static void process_pellets(PacmanGame *game);
+static bool check_pacghost_collision(PacmanGame *game);			//return true if pacman collided with any ghosts
 static void enter_state(PacmanGame *game, GameState state);
+static bool resolve_telesquare(PhysicsBody *body);		//wraps the body around if they've gone tele square
 
 void game_tick(PacmanGame *game)
 {
@@ -38,8 +40,7 @@ void game_tick(PacmanGame *game)
 			process_ghosts(game);
 
 			process_fruit(game);
-			check_pellets_collision(game);
-			check_pacghost_collision();
+			process_pellets(game);
 
 
 			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
@@ -87,7 +88,7 @@ void game_tick(PacmanGame *game)
 	//
 
 	bool allPelletsEaten = game->pelletHolder.numLeft == 0;
-	bool collidedWithGhost = false;
+	bool collidedWithGhost = check_pacghost_collision(game);
 	int lives = game->pacman.livesLeft;
 
 	switch (game->gameState)
@@ -103,7 +104,7 @@ void game_tick(PacmanGame *game)
 		case GamePlayState:
 			if (key_held(SDLK_0)) enter_state(game, DeathState);
 
-			else if 	(allPelletsEaten) enter_state(game, WinState);
+			else if (allPelletsEaten) enter_state(game, WinState);
 			else if (collidedWithGhost) enter_state(game, DeathState); 
 			
 			break;
@@ -172,15 +173,16 @@ void game_render(PacmanGame *game)
 			draw_large_pellets(&game->pelletHolder, true);
 			draw_board(&game->board);
 
-			for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 
 			if (game->gameFruit1.fruitMode == Displaying) draw_fruit_game(game->currentLevel);
 			if (game->gameFruit2.fruitMode == Displaying) draw_fruit_game(game->currentLevel);
 
 			if (game->gameFruit1.eaten && ticks_game() - game->gameFruit1.eatenAt < 2000) draw_fruit_pts(&game->gameFruit1);
 			if (game->gameFruit2.eaten && ticks_game() - game->gameFruit2.eatenAt < 2000) draw_fruit_pts(&game->gameFruit2);
-
+			
 			draw_pacman(&game->pacman);
+
+			for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 			break;
 		case WinState:
 			draw_pacman_static(&game->pacman);
@@ -202,7 +204,11 @@ void game_render(PacmanGame *game)
 			if (dt < 1000)
 			{
 				//draw everything normally
-				//draw_pacman
+
+				//TODO: this actually draws the last frame pacman was on when he died
+				draw_pacman_static(&game->pacman);
+
+				for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 			}
 			else
 			{
@@ -275,13 +281,13 @@ static void enter_state(PacmanGame *game, GameState state)
 bool can_move(Pacman *pacman, Board *board, Direction dir)
 {
 	//easy edge cases, tile has to be parallal with a direction to move it
-	if ((dir == Up   || dir == Down ) && pacman->xTileOffset != 0) return false;
-	if ((dir == Left || dir == Right) && pacman->yTileOffset != 0) return false;
+	if ((dir == Up   || dir == Down ) && pacman->body.xOffset != 0) return false;
+	if ((dir == Left || dir == Right) && pacman->body.yOffset != 0) return false;
 
 	//if pacman wants to move on an axis and he is already partially on that axis (not 0)
 	//it is always a valid move
-	if ((dir == Up   || dir == Down ) && pacman->yTileOffset != 0) return true;
-	if ((dir == Left || dir == Right) && pacman->xTileOffset != 0) return true;
+	if ((dir == Left || dir == Right) && pacman->body.xOffset != 0) return true;
+	if ((dir == Up   || dir == Down ) && pacman->body.yOffset != 0) return true;
 
 	//pacman is at 0/0 and moving in the requested direction depends on if there is a valid tile there
 	int x = 0;
@@ -292,8 +298,8 @@ bool can_move(Pacman *pacman, Board *board, Direction dir)
 	else if (dir == Up) 	y = -1;
 	else 					y =  1;
 
-	int newX = pacman->x + x;
-	int newY = pacman->y + y;
+	int newX = pacman->body.x + x;
+	int newY = pacman->body.y + y;
 
 	return is_valid_square(board, newX, newY) || is_tele_square(newX, newY);
 }
@@ -341,17 +347,17 @@ static void process_player(PacmanGame *game)
 	{
 		//printf("valid move\n");
 		//just replace pacmans current direction
-		pacman->direction = newDir;
+		pacman->body.dir = newDir;
 		pacman->movementType = Unstuck;
 	}
-	else if (can_move(pacman, board, pacman->direction))
+	else if (can_move(pacman, board, pacman->body.dir))
 	{
 		//printf("pacman default moving\n");
 		pacman->movementType = Unstuck;
 		//pacman can move pacman in his current direction, so let him
-		if 		(pacman->direction == Left) 	{ x = -1; y =  0; }
-		else if (pacman->direction == Right) 	{ x =  1; y =  0; }
-		else if (pacman->direction == Up) 		{ x =  0; y = -1; }
+		if 		(pacman->body.dir == Left) 	{ x = -1; y =  0; }
+		else if (pacman->body.dir == Right) 	{ x =  1; y =  0; }
+		else if (pacman->body.dir == Up) 		{ x =  0; y = -1; }
 		else 									{ x =  0; y =  1; }
 	}
 	else
@@ -363,38 +369,8 @@ static void process_player(PacmanGame *game)
 		return;
 	}
 
-	//move him 1 increment of a tile
-	pacman->xTileOffset += x;
-	pacman->yTileOffset += y;
-
-	//now check he hasn't moved over the boundry of a square
-	// if he's outside range (-8, 7) increment in that direction
-	if (pacman->xTileOffset < -8) 
-	{
-		pacman->xTileOffset = 7;
-		pacman->x--;
-
-		//special case of teleport square
-		if (pacman->x == -1) pacman->x = 27;
-	} 
-	else if (pacman->xTileOffset > 7)
-	{
-		pacman->xTileOffset = -8;
-		pacman->x++;
-
-		//special case of teleport square
-		if (pacman->x == 28) pacman->x = 0;
-	} 
-	else if (pacman->yTileOffset < -8) 
-	{
-		pacman->yTileOffset = 7;
-		pacman->y--;
-	} 
-	else if (pacman->yTileOffset > 7)
-	{
-		pacman->yTileOffset = -8;
-		pacman->y++;
-	}
+	move(&pacman->body);
+	resolve_telesquare(&pacman->body);
 }
 
 static void process_ghosts(PacmanGame *game)
@@ -403,9 +379,16 @@ static void process_ghosts(PacmanGame *game)
 	{
 		Ghost *g = &game->ghosts[i];
 
-		if (g->movementMode == InPen || g->movementMode == LeavingPen)
+		if (g->movementMode == InPen)
 		{
+			//ghosts bob up and down - move in direction. If they hit a square, change direction
 			//TODO: special modes, will handle later
+			continue;
+		}
+
+		if (g->movementMode == LeavingPen)
+		{
+			//TODO: will handle later
 			continue;
 		}
 
@@ -514,7 +497,7 @@ static void process_fruit(PacmanGame *game)
 
 	//check for collisions
 
-	if (f1->fruitMode == Displaying && pacman_fruit_collides(pac, f1))
+	if (f1->fruitMode == Displaying && collides_obj(&pac->body, f1->x, f1->y))
 	{
 		f1->fruitMode = Displayed;
 		f1->eaten = true;
@@ -522,7 +505,7 @@ static void process_fruit(PacmanGame *game)
 		pac->score += fruit_points(f1->fruit);
 	}
 
-	if (f2->fruitMode == Displaying && pacman_fruit_collides(pac, f2))
+	if (f2->fruitMode == Displaying && collides_obj(&pac->body, f2->x, f2->y))
 	{
 		f2->fruitMode = Displayed;
 		f2->eaten = true;
@@ -531,7 +514,7 @@ static void process_fruit(PacmanGame *game)
 	}
 }
 
-static void check_pellets_collision(PacmanGame *game)
+static void process_pellets(PacmanGame *game)
 {
 	//if pacman and pellet collide
 	//give pacman that many points
@@ -546,7 +529,7 @@ static void check_pellets_collision(PacmanGame *game)
 		//skip if we've eaten this one already
 		if (p->eaten) continue;
 
-		if (pacman_pellet_collides(&game->pacman, p))
+		if (collides_obj(&game->pacman.body, p->x, p->y))
 		{
 			holder->numLeft--;
 			
@@ -567,9 +550,16 @@ static void check_pellets_collision(PacmanGame *game)
 	//maybe next time, poor pacman
 }
 
-static void check_pacghost_collision(void)
+static bool check_pacghost_collision(PacmanGame *game)
 {
+	for (int i = 0; i < 4; i++)
+	{
+		Ghost *g = &game->ghosts[i];
 
+		if (collides_obj(&game->pacman.body, g->x, g->y)) return true;
+	}
+
+	return false;
 }
 
 void gamestart_init(PacmanGame *game)
@@ -624,4 +614,17 @@ int int_length(int x)
     if (x >= 100) 		 return 3;
     if (x >= 10) 		 return 2;
     return 1;
+}
+
+
+static bool resolve_telesquare(PhysicsBody *body)
+{
+	//TODO: chuck this back in the board class somehow
+
+	if (body->y != 14) return false;
+	
+	if (body->x == -1) { body->x = 27; return true; }
+	if (body->x == 28) { body->x =  0; return true; }
+
+	return false;
 }

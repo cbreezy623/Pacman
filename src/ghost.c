@@ -31,14 +31,14 @@ void reset_ghost(Ghost *ghost, GhostType type)
 	switch (type)
 	{
 		case Blinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
-		//case Inky:		{ x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
-		//case Clyde:		{ x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
-		//case Pinky:		{ x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; break; }
+		case Inky:		{ x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
+		case Clyde:		{ x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
+		case Pinky:		{ x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; break; }
 
 		//testing
-		case Inky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
-		case Clyde:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
-		case Pinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
+		//case Inky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
+		//case Clyde:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
+		//case Pinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
 
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
@@ -172,8 +172,8 @@ void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pa
 void execute_red_logic(Ghost *redGhost, Pacman *pacman)
 {
 	// Red's AI is to set his target position to pacmans
-	redGhost->targetX = pacman->x;
-	redGhost->targetY = pacman->y;
+	redGhost->targetX = pacman->body.x;
+	redGhost->targetY = pacman->body.y;
 }
 
 void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman)
@@ -183,7 +183,7 @@ void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman)
 	int targetOffsetX;
 	int targetOffsetY;
 	
-	switch (pacman->direction)
+	switch (pacman->body.dir)
 	{
 		case Up:	{ targetOffsetX =  4; targetOffsetY = -4; } break;	//4 up AND 4 left, as per bug in original game
 		case Down:	{ targetOffsetX =  0; targetOffsetY =  4; } break;
@@ -192,8 +192,8 @@ void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman)
 		default: printf("error direction\naborting\n"); exit(1);
 	}
 	
-	pinkGhost->targetX = pacman->x + targetOffsetX;
-	pinkGhost->targetY = pacman->y + targetOffsetY;
+	pinkGhost->targetX = pacman->body.x + targetOffsetX;
+	pinkGhost->targetY = pacman->body.y + targetOffsetY;
 }
 
 void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman)
@@ -202,8 +202,8 @@ void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman)
 	// If Pacmans distance is more than 5 squares away, his target is pacman
 	// If Pacman is within 5 squares, his target is his home
 	
-	int dx = orangeGhost->x - pacman->x;
-	int dy = orangeGhost->y - pacman->x;
+	int dx = orangeGhost->x - pacman->body.x;
+	int dy = orangeGhost->y - pacman->body.y;
 	
 	int distance = sqrt(dx * dx + dy * dy);
 
@@ -222,7 +222,7 @@ void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman)
 	int targetOffsetX;
 	int targetOffsetY;
 	
-	switch (pacman->direction)
+	switch (pacman->body.dir)
 	{
 		case Up:	{ targetOffsetX =  2; targetOffsetY = -2; } break;	//2 up AND 2 left, as per bug in original game
 		case Down:	{ targetOffsetX =  0; targetOffsetY =  2; } break;
@@ -231,8 +231,8 @@ void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman)
 		default: printf("error direction\naborting\n"); exit(1);
 	}
 	
-	int tx = pacman->x + targetOffsetX;
-	int ty = pacman->y + targetOffsetY;
+	int tx = pacman->body.x + targetOffsetX;
+	int ty = pacman->body.y + targetOffsetY;
 	
 	int rx = redGhost->x;
 	int ry = redGhost->y;

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "main.h"
+#include "physics.h"
 
 //pacman has a location (x,y) on the board. This is the tile his center is, and it defines his actual tile
 
@@ -21,14 +22,10 @@ typedef enum
 //Defines Pacman. Includes all his information such as location, lives, score, etc.
 typedef struct 
 {
-	int x;
-	int y;
-	int xTileOffset;
-	int yTileOffset;
+	PhysicsBody body;
 	int missedFrames;
 	int livesLeft;
 	int score;
-	Direction direction;
 	Direction lastAttemptedMoveDirection;
 	MovementType movementType;
 } Pacman;

@@ -323,22 +323,22 @@ void draw_pacman(Pacman *pacman)
 	}
 	else
 	{
-		aniDir = pacman->direction;
+		aniDir = pacman->body.dir;
 		frame = animation_get_frame(50, 4);
 	}
 
-	int xOffset = pacman->xTileOffset - 4; 
-	int yOffset = offset + pacman->yTileOffset - 4;
+	int xOffset = pacman->body.xOffset - 4; 
+	int yOffset = offset + pacman->body.yOffset - 4;
 
-	draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->x, pacman->y, xOffset, yOffset);
+	draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
 }
 
 void draw_pacman_static(Pacman *pacman)
 {
-	int xOffset = pacman->xTileOffset - 4;
-	int yOffset = offset + pacman->yTileOffset - 6;
+	int xOffset = pacman->body.xOffset - 4;
+	int yOffset = offset + pacman->body.yOffset - 6;
 
-	draw_image_coord_offset(pacman_image(), pacman->x, pacman->y, xOffset, yOffset);
+	draw_image_coord_offset(pacman_image(), pacman->body.x, pacman->body.y, xOffset, yOffset);
 }
 
 void draw_pacman_death(Pacman *pacman, unsigned int dt)
@@ -376,10 +376,10 @@ void draw_pacman_death(Pacman *pacman, unsigned int dt)
 		return;
 	}
 
-	int xOffset = pacman->xTileOffset - 4;
-	int yOffset = offset + pacman->yTileOffset - 6;
+	int xOffset = pacman->body.xOffset - 4;
+	int yOffset = offset + pacman->body.yOffset - 6;
 
-	draw_image_coord_offset(image, pacman->x, pacman->y, xOffset, yOffset);
+	draw_image_coord_offset(image, pacman->body.x, pacman->body.y, xOffset, yOffset);
 }
 
 void draw_pacman_lives(int numLives)

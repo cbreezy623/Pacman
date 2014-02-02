@@ -20,6 +20,7 @@ bool is_tele_square(int x, int y)
 
 bool is_ghost_noup_square(int x, int y)
 {
+	//squares are:
 	// (12, 22) (14, 22)
 	// (12, 10) (14, 10)
 	return (x == 12 && y == 22) || (x == 15 && y == 22) ||
