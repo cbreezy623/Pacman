@@ -371,13 +371,23 @@ static void process_ghosts(PacmanGame *game)
 		if (g->movementMode == InPen)
 		{
 			//ghosts bob up and down - move in direction. If they hit a square, change direction
-			//TODO: special modes, will handle later
+			bool moved = move(&g->body);
+
+			if (moved && (g->body.y == 13 || g->body.y == 15))
+			{
+				g->body.dir = dir_opposite(g->body.dir);
+			}
+
 			continue;
 		}
 
 		if (g->movementMode == LeavingPen)
 		{
-			//TODO: will handle later
+			//ghost is in center of tile
+			//move em to the center of the pen (in x axis)
+			//then more em up out the gate
+			//when they are out of the gate, set them to be in normal chase mode then set them off on their way
+
 			continue;
 		}
 

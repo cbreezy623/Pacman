@@ -86,7 +86,10 @@ void draw_vanity_pellet_info(bool flashing)
 void draw_vanity_animation(int dt)
 {
 	//TODO do this later
-	//printf("animate: %d\n", dt);
+	if (dt)
+	{
+		
+	}
 }
 
 //
