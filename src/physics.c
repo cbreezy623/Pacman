@@ -1,21 +1,4 @@
 #include "physics.h"
-/*
-bool pacman_pellet_collides(Pacman *pacman, Pellet *pellet)
-{
-	return pellet->x == pacman->x && pellet->y == pacman->y;
-}
-
-bool pacman_fruit_collides(Pacman *pacman, GameFruit *fruit)
-{
-	return fruit->x == pacman->x && fruit->y == pacman->y;
-}
-
-bool pacman_ghost_collides(Pacman *pacman, Ghost *ghost)
-{
-	return pacman->x == ghost->x && pacman->y == ghost->y; 	
-}
-
-*/
 
 bool collides(PhysicsBody *body1, PhysicsBody *body2)
 {

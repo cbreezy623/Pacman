@@ -401,13 +401,13 @@ void draw_pacman_lives(int numLives)
 
 void draw_ghost(Ghost *ghost)
 {
-	SDL_Surface *image = ghost_image(ghost->ghostType, ghost->direction, 0);
+	SDL_Surface *image = ghost_image(ghost->ghostType, ghost->body.dir, 0);
 
-	int x = ghost->x;
-	int y = ghost->y + Y_OFFSET;
+	int x = ghost->body.x;
+	int y = ghost->body.y + Y_OFFSET;
 
-	int xOffset = ghost->xTileOffset - 6;
-	int yOffset = ghost->yTileOffset - 6;
+	int xOffset = ghost->body.xOffset - 6;
+	int yOffset = ghost->body.yOffset - 6;
 
 	draw_image_coord_offset(image, x, y, xOffset, yOffset);
 }

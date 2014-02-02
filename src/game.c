@@ -394,59 +394,17 @@ static void process_ghosts(PacmanGame *game)
 
 		//all other modes can move normally (I think,)
 
-		if (g->xTileOffset == 0 && g->yTileOffset == 0)
+		if (g->body.xOffset == 0 && g->body.yOffset == 0)
 		{
 			//they've hit the center of a tile, so change their current direction to the new direction
-			g->direction = g->transDirection;
+			g->body.dir = g->transDirection;
 			g->transDirection = g->nextDirection;
 		}
 		
-		int x, y;
+		bool changedTile;
 
-		if 		(g->direction == Left) 	{ x = -1; y =  0; }
-		else if (g->direction == Right) { x =  1; y =  0; }
-		else if (g->direction == Up) 	{ x =  0; y = -1; }
-		else 							{ x =  0; y =  1; }
-
-		g->xTileOffset += x;
-		g->yTileOffset += y;
-
-		bool changedTile = false;
-
-		if (g->xTileOffset < -8) 
-		{
-			g->xTileOffset = 7;
-			g->x--;
-
-			changedTile = true;
-
-			//special case of teleport square
-			if (g->x == -1) g->x = 27;
-		} 
-		else if (g->xTileOffset > 7)
-		{
-			g->xTileOffset = -8;
-			g->x++;
-
-			changedTile = true;
-
-			//special case of teleport square
-			if (g->x == 28) g->x = 0;
-		} 
-		else if (g->yTileOffset < -8) 
-		{
-			g->yTileOffset = 7;
-			g->y--;
-
-			changedTile = true;
-		} 
-		else if (g->yTileOffset > 7)
-		{
-			g->yTileOffset = -8;
-			g->y++;
-
-			changedTile = true;
-		}
+		changedTile = move(&g->body);
+		resolve_telesquare(&g->body);
 
 		if (changedTile)
 		{
@@ -556,7 +514,7 @@ static bool check_pacghost_collision(PacmanGame *game)
 	{
 		Ghost *g = &game->ghosts[i];
 
-		if (collides_obj(&game->pacman.body, g->x, g->y)) return true;
+		if (collides(&game->pacman.body, &g->body)) return true;
 	}
 
 	return false;

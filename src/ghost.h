@@ -25,13 +25,9 @@ typedef enum
 
 typedef struct 
 {
-	int x;
-	int y;
-	int xTileOffset;
-	int yTileOffset;
+	PhysicsBody body;
 	int targetX;
 	int targetY;
-	Direction direction;			//current direction ghost is facing
 	Direction transDirection;		//direction ghost should face for middle of current tile to middle of next tile
 	Direction nextDirection;		//direction ghost should face when reaching the center of the next tilea
 	GhostType ghostType;

@@ -43,14 +43,10 @@ void reset_ghost(Ghost *ghost, GhostType type)
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
 
-	ghost->x = x;
-	ghost->y = y;
-	ghost->xTileOffset = ox;
-	ghost->yTileOffset = oy;
+	ghost->body = (PhysicsBody) { x, y, ox, oy, dir, 1};
 	ghost->targetX = 0;
 	ghost->targetY = 0;
 	ghost->movementMode = mode;
-	ghost->direction = dir;
 	ghost->transDirection = Left;
 	ghost->nextDirection = Left;
 }
@@ -109,8 +105,8 @@ Direction next_direction(Ghost *ghost, Board *board)
 	//calculate the distances between the squares (or if it is even valid)
 	for (int i = 0; i < 4; i++)
 	{
-		int testX = ghost->x + x + offsets[i].x;
-		int testY = ghost->y + y + offsets[i].y;
+		int testX = ghost->body.x + x + offsets[i].x;
+		int testY = ghost->body.y + y + offsets[i].y;
 
 		//allow for when ghost is going through teleporter
 		if (testX == 0) testX = 26;
@@ -202,8 +198,8 @@ void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman)
 	// If Pacmans distance is more than 5 squares away, his target is pacman
 	// If Pacman is within 5 squares, his target is his home
 	
-	int dx = orangeGhost->x - pacman->body.x;
-	int dy = orangeGhost->y - pacman->body.y;
+	int dx = orangeGhost->body.x - pacman->body.x;
+	int dy = orangeGhost->body.y - pacman->body.y;
 	
 	int distance = sqrt(dx * dx + dy * dy);
 
@@ -234,8 +230,8 @@ void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman)
 	int tx = pacman->body.x + targetOffsetX;
 	int ty = pacman->body.y + targetOffsetY;
 	
-	int rx = redGhost->x;
-	int ry = redGhost->y;
+	int rx = redGhost->body.x;
+	int ry = redGhost->body.y;
 	
 	int targetX = 2 * tx - rx;
 	int targetY = 2 * ty - ry;
