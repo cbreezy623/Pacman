@@ -1,6 +1,5 @@
 #include "ghost.h"
 
-#include <math.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -28,22 +27,21 @@ void reset_ghost(Ghost *ghost, GhostType type)
 
 	switch (type)
 	{
-		case Blinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
-		case Inky:		{ x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
-		case Clyde:		{ x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
-		case Pinky:		{ x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; break; }
+		case Blinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
+		//case Inky:		{ x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
+		//case Clyde:		{ x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
+		//case Pinky:		{ x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; break; }
 
 		//testing
-		//case Inky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
-		//case Clyde:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
-		//case Pinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Chase; dir = Left; break; }
+		case Inky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
+		case Clyde:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
+		case Pinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
 
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
 
 	ghost->body = (PhysicsBody) { x, y, ox, oy, dir, 1};
-	ghost->targetX = 0;
-	ghost->targetY = 0;
+	ghost->movementMode = mode;
 	ghost->movementMode = mode;
 	ghost->transDirection = Left;
 	ghost->nextDirection = Left;
@@ -57,10 +55,10 @@ void send_to_home(Ghost *ghost, GhostType type)
 
 	switch (type)
 	{
-		case Blinky: 	{ targetX =  4; targetY =   4; break; }
-		case Inky:		{ targetX = 34; targetY =   4; break; }
-		case Clyde:		{ targetX =  4; targetY =  34; break; }
-		case Pinky:		{ targetX = 34; targetY =  34; break; }
+		case Blinky: 	{ targetX = 25; targetY =  -2; break; }
+		case Inky:		{ targetX = 27; targetY =  31; break; }
+		case Clyde:		{ targetX =  0; targetY =  31; break; }
+		case Pinky:		{ targetX =  2; targetY =  -2; break; }
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
 	
@@ -114,8 +112,9 @@ Direction next_direction(Ghost *ghost, Board *board)
 
 		int dx = testX - ghost->targetX;
 		int dy = testY - ghost->targetY;
-
-		targets[i].distance = (int) sqrt(dx * dx + dy * dy);
+		
+		//really the square root, but don't take to keep precision
+		targets[i].distance = (dx * dx + dy * dy);
 	}
 
 	//a ghost can never turn around, so exclude the opposite direction to what they are facing
@@ -143,6 +142,7 @@ void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pa
 	if (targetGhost->movementMode == Scatter)
 	{
 		send_to_home(targetGhost, type);
+		return;
 	}
 
 	switch (type)
@@ -186,9 +186,10 @@ void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman)
 	int dx = orangeGhost->body.x - pacman->body.x;
 	int dy = orangeGhost->body.y - pacman->body.y;
 	
-	int distance = (int) sqrt(dx * dx + dy * dy);
+	//really the square root, but can compare with square of other number
+	int distance = dx * dx + dy * dy;
 
-	if (distance >= 8)
+	if (distance >= (8 * 8))
 	{
 		execute_red_logic(orangeGhost, pacman);
 	}

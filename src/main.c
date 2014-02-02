@@ -219,7 +219,6 @@ static void key_down_hacks(int keycode)
     if (state == Menu && keycode == SDLK_5 && numCredits < 99) 
     {
         numCredits++;
-        printf("add credit\n");
     }
 }
 

@@ -102,6 +102,8 @@ void game_tick(PacmanGame *game)
 
 			break;
 		case GamePlayState:
+			
+			//TODO: remove this hacks
 			if (key_held(SDLK_0)) enter_state(game, DeathState);
 
 			else if (allPelletsEaten) enter_state(game, WinState);
@@ -129,7 +131,6 @@ void game_tick(PacmanGame *game)
 			} 
 			break;
 	}
-
 }
 
 void game_render(PacmanGame *game)

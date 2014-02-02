@@ -21,7 +21,7 @@ Defines           :=
 Defines_Debug     := DEBUG
 Defines_Release   := RELEASE
 # List of Library Names (Libs is included before mode specific Libs_MODE)
-Libs              := SDL SDL_image SDL_ttf SDL_mixer SDL_gfx m
+Libs              := SDL SDL_image SDL_ttf SDL_mixer SDL_gfx
 Libs_Debug        :=
 Libs_Release      :=
 # Search Paths for Libraries (LibPaths is included before mode specific LibPaths_MODE)
