@@ -17,10 +17,6 @@
 void load_images(void);
 void dispose_images(void);
 
-//Clones the image, creating and returning a new copy
-//Warning: this allocates memory and the created surface will need to be disposed
-SDL_Surface *clone_image(SDL_Surface* toClone);
-
 SDL_Surface* double_corner_image(DiagDirection direction);
 SDL_Surface* single_corner_image(DiagDirection direction);
 

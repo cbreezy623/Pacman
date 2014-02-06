@@ -3,12 +3,11 @@
 #include <SDL/SDL_gfxPrimitives.h>
 
 #include "imageloader.h"
+#include "imageutil.h"
 
 static SDL_Surface *get_surface(char c);
 static SDL_Color get_color(TextColor color);
-static Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 static void set_fontimage_color(SDL_Surface *image, TextColor color);
-static void replace_pixel(SDL_Surface *image, SDL_Color newColor);
 
 static TextColor textColor;
 
@@ -145,52 +144,6 @@ void draw_numtext_coord(SDL_Surface *surface, const char *text, int x, int y)
 void draw_text_coord(SDL_Surface *surface, const char *text, int x, int y)
 {
 	draw_text(surface, text, x * 16, y * 16);
-}
-
-static void replace_pixel(SDL_Surface *image, SDL_Color newColor)
-{
-	for (int y = 0; y < image->h; y++)
-	{
-		for (int x = 0; x < image->w; x++)
-		{
-			Uint32 pixel = get_pixel(image, x, y);
-			SDL_Color c;
-			SDL_GetRGBA(pixel, image->format, &c.r, &c.g, &c.b, &c.unused);
-
-			if (c.unused == 255) pixelRGBA(image, x, y, newColor.r, newColor.g, newColor.b, newColor.unused);
-		}
-	}
-}
-
-static Uint32 get_pixel(SDL_Surface *surface, int x, int y)
-{
-    int bpp = surface->format->BytesPerPixel;
-    /* Here p is the address to the pixel we want to retrieve */
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-
-    switch(bpp) {
-    case 1:
-        return *p;
-        break;
-
-    case 2:
-        return *(Uint16 *)p;
-        break;
-
-    case 3:
-        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            return p[0] << 16 | p[1] << 8 | p[2];
-        else
-            return p[0] | p[1] << 8 | p[2] << 16;
-        break;
-
-    case 4:
-        return *(Uint32 *)p;
-        break;
-
-    default:
-        return 0;       /* shouldn't happen, but avoids warnings */
-    }
 }
 
 static void set_fontimage_color(SDL_Surface *image, TextColor color)

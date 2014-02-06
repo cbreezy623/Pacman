@@ -121,11 +121,6 @@ void dispose_misc_images(void);
 void dispose_char_images(void);
 void dispose_fruit_images(void);
 
-SDL_Surface* clone_image(SDL_Surface* src)
-{
-    return SDL_ConvertSurface(src, src->format, SDL_SWSURFACE);
-}
-
 void load_images(void)
 {
     load_board_images();

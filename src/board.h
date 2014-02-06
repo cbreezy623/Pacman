@@ -7,6 +7,18 @@
 #define BOARD_LENGTH 28
 #define BOARD_HEIGHT 31
 
+typedef enum 
+{
+	DoubleCorner,
+	SingleCorner,
+	Middle,
+	Hallway,
+	TLeft,
+	TRight,
+	PenCorner,
+	PenSide
+} SquareType;
+
 typedef struct 
 {
 	int x, y;

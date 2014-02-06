@@ -47,7 +47,7 @@ void load_board(Board *board, PelletHolder *pelletHolder, const char* file)
 			
 			case '8': image = tleft_image(TopRight);				break;
 			case '9': image = tleft_image(TopLeft); 				break;
-			case 'a': image = tleft_image(BottomLeft); 			break;
+			case 'a': image = tleft_image(BottomLeft); 				break;
 			case 'b': image = tleft_image(BottomRight); 			break;
 			
 			case 'c': image = tright_image(TopLeft);				break;
