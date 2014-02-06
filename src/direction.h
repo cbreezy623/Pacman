@@ -9,7 +9,7 @@ typedef enum
 	Right
 } Direction;
 
-//Defines the four ordinal directions
+//Defines the four ordinal directions.
 typedef enum 
 {
 	TopLeft, 
@@ -17,7 +17,6 @@ typedef enum
 	BottomLeft, 
 	BottomRight
 } DiagDirection;
-
 
 //Copies -1, 0, 1 to the given x and y ints depending on what direction is given.
 void dir_xy(Direction dir, int *x, int *y);
