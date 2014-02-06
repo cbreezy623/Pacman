@@ -35,58 +35,25 @@
 #define NUMS_DIR "nums/"
 #define SPEC_DIR "special/"
 
-
-
 //loads an image from filename and returns it as an SDL_Surface
 SDL_Surface *load_image(const char *filename);
 
 //
 //hallway sprites
 //
-SDL_Surface *double_cornerTL;
-SDL_Surface *double_cornerTR;
-SDL_Surface *double_cornerBL;
-SDL_Surface *double_cornerBR;
-
-SDL_Surface *single_cornerTL;
-SDL_Surface *single_cornerTR;
-SDL_Surface *single_cornerBL;
-SDL_Surface *single_cornerBR;
-
-SDL_Surface *tleftTL;
-SDL_Surface *tleftTR;
-SDL_Surface *tleftBL;
-SDL_Surface *tleftBR;
-
-SDL_Surface *trightTL;
-SDL_Surface *trightTR;
-SDL_Surface *trightBL;
-SDL_Surface *trightBR;
-
-SDL_Surface *middleU;
-SDL_Surface *middleD;
-SDL_Surface *middleL;
-SDL_Surface *middleR;
-
-SDL_Surface *hallwayU;
-SDL_Surface *hallwayD;
-SDL_Surface *hallwayL;
-SDL_Surface *hallwayR;
+SDL_Surface *double_corner_imgs[4];
+SDL_Surface *single_corner_imgs[4];
+SDL_Surface *tleft_imgs[4];
+SDL_Surface *tright_imgs[4];
+SDL_Surface *middle_imgs[4];
+SDL_Surface *hallway_imgs[4];
 
 //
 //pen sprites
 //
                                                     
-SDL_Surface *penTL;
-SDL_Surface *penTR;
-SDL_Surface *penBL;
-SDL_Surface *penBR;
-
-SDL_Surface *penSideU;
-SDL_Surface *penSideD;
-SDL_Surface *penSideL;
-SDL_Surface *penSideR;
-
+SDL_Surface *pen_imgs[4];
+SDL_Surface *penSide_imgs[4];
 SDL_Surface *penGate;
 
 //
@@ -178,87 +145,56 @@ void dispose_images(void)
     dispose_fruit_images();
 }
 
+void load_diags(SDL_Surface *images[4], const char *file)
+{
+    char dirStr[256];
+    const char *extensions[] = {"UL", "UR", "BL", "BR"};
+
+    for (int i = 0; i < 4; i++)
+    {
+        sprintf(dirStr, "%s%s%s", file, extensions[i], ".png");
+        images[i] = load_image(dirStr);
+    }
+}
+
+void load_dirs(SDL_Surface *images[4], const char *file)
+{
+    char dirStr[256];
+    const char *extensions[] = {"U", "B", "L", "R"};
+
+    for (int i = 0; i < 4; i++)
+    {
+        sprintf(dirStr, "%s%s%s", file, extensions[i], ".png");
+        images[i] = load_image(dirStr);
+    }
+}
+
 void load_board_images(void)
 {
-    double_cornerTL = load_image(DIR MAP_DIR "doublecornerUL.png");
-    double_cornerTR = load_image(DIR MAP_DIR "doublecornerUR.png");
-    double_cornerBL = load_image(DIR MAP_DIR "doublecornerBL.png");
-    double_cornerBR = load_image(DIR MAP_DIR "doublecornerBR.png");
-    
-    single_cornerTL = load_image(DIR MAP_DIR "singlecornerUL.png");
-    single_cornerTR = load_image(DIR MAP_DIR "singlecornerUR.png");
-    single_cornerBL = load_image(DIR MAP_DIR "singlecornerBL.png");
-    single_cornerBR = load_image(DIR MAP_DIR "singlecornerBR.png");
+    load_diags(double_corner_imgs, DIR MAP_DIR "doublecorner");
+    load_diags(single_corner_imgs, DIR MAP_DIR "singlecorner");
+    load_diags(tleft_imgs, DIR MAP_DIR "tleft");
+    load_diags(tright_imgs, DIR MAP_DIR "tright");
+    load_dirs(middle_imgs, DIR MAP_DIR "middle");
+    load_dirs(hallway_imgs, DIR MAP_DIR "hallway");
 
-    tleftTL = load_image(DIR MAP_DIR "tleftUL.png");
-    tleftTR = load_image(DIR MAP_DIR "tleftUR.png");
-    tleftBL = load_image(DIR MAP_DIR "tleftBL.png");
-    tleftBR = load_image(DIR MAP_DIR "tleftBR.png");
-
-    trightTL = load_image(DIR MAP_DIR "trightUL.png");
-    trightTR = load_image(DIR MAP_DIR "trightUR.png");
-    trightBL = load_image(DIR MAP_DIR "trightBL.png");
-    trightBR = load_image(DIR MAP_DIR "trightBR.png");
-
-    middleU = load_image(DIR MAP_DIR "middleU.png");
-    middleD = load_image(DIR MAP_DIR "middleB.png");
-    middleL = load_image(DIR MAP_DIR "middleL.png");
-    middleR = load_image(DIR MAP_DIR "middleR.png");
-
-    hallwayU = load_image(DIR MAP_DIR "hallwayU.png");
-    hallwayD = load_image(DIR MAP_DIR "hallwayB.png");
-    hallwayL = load_image(DIR MAP_DIR "hallwayL.png");
-    hallwayR = load_image(DIR MAP_DIR "hallwayR.png");
-
-    penTL = load_image(DIR MAP_DIR PEN_DIR "pentl.png");
-    penTR = load_image(DIR MAP_DIR PEN_DIR "pentr.png");
-    penBL = load_image(DIR MAP_DIR PEN_DIR "penbl.png");
-    penBR = load_image(DIR MAP_DIR PEN_DIR "penbr.png");
-
-    penSideU = load_image(DIR MAP_DIR PEN_DIR "pent.png");
-    penSideD = load_image(DIR MAP_DIR PEN_DIR "penb.png");
-    penSideL = load_image(DIR MAP_DIR PEN_DIR "penl.png");
-    penSideR = load_image(DIR MAP_DIR PEN_DIR "penr.png");
-
+    load_diags(pen_imgs, DIR MAP_DIR PEN_DIR "pen");
+    load_dirs(penSide_imgs, DIR MAP_DIR PEN_DIR "pen");
     penGate = load_image(DIR MAP_DIR PEN_DIR "pengate.png");
 }
 
 void dispose_board_images(void)
 {
-    SDL_FreeSurface(double_cornerTL);
-    SDL_FreeSurface(double_cornerTR);
-    SDL_FreeSurface(double_cornerBL);
-    SDL_FreeSurface(double_cornerBR);
-
-    SDL_FreeSurface(single_cornerTL);
-    SDL_FreeSurface(single_cornerTR);
-    SDL_FreeSurface(single_cornerBL);
-    SDL_FreeSurface(single_cornerBR);
-
-    SDL_FreeSurface(tleftTL);
-    SDL_FreeSurface(tleftTR);
-    SDL_FreeSurface(tleftBL);
-    SDL_FreeSurface(tleftBR);
-
-    SDL_FreeSurface(trightTL);
-    SDL_FreeSurface(trightTR);
-    SDL_FreeSurface(trightBL);
-    SDL_FreeSurface(trightBR);
-
-    SDL_FreeSurface(middleU);
-    SDL_FreeSurface(middleD);
-    SDL_FreeSurface(middleL);
-    SDL_FreeSurface(middleR);
-
-    SDL_FreeSurface(penTL);
-    SDL_FreeSurface(penTR);
-    SDL_FreeSurface(penBL);
-    SDL_FreeSurface(penBR);
-
-    SDL_FreeSurface(penSideU);
-    SDL_FreeSurface(penSideD);
-    SDL_FreeSurface(penSideL);
-    SDL_FreeSurface(penSideR);
+    for (int i = 0; i < 4; i++) 
+    {
+        SDL_FreeSurface(double_corner_imgs[i]);
+        SDL_FreeSurface(single_corner_imgs[i]);
+        SDL_FreeSurface(tleft_imgs[i]);
+        SDL_FreeSurface(tright_imgs[i]);
+        SDL_FreeSurface(middle_imgs[i]);
+        SDL_FreeSurface(pen_imgs[i]);
+        SDL_FreeSurface(penSide_imgs[i]);
+    }
 
     SDL_FreeSurface(penGate);
 }
@@ -585,98 +521,42 @@ SDL_Surface** get_spec_images(void)
 
 SDL_Surface* double_corner_image(DiagDirection direction)
 {
-    switch(direction)
-    {
-        case TopLeft:      return double_cornerTL;
-        case TopRight:     return double_cornerTR;
-        case BottomLeft:   return double_cornerBL;
-        case BottomRight:  return double_cornerBR;
-        default:            exit(1);
-    }
+    return double_corner_imgs[direction];
 }
 
 SDL_Surface* single_corner_image(DiagDirection direction)
 {
-    switch(direction)
-    {
-        case TopLeft:      return single_cornerTL;
-        case TopRight:     return single_cornerTR;
-        case BottomLeft:   return single_cornerBL;
-        case BottomRight:  return single_cornerBR;
-        default:            exit(1);
-    } 
+    return single_corner_imgs[direction];
 }
 
 SDL_Surface* middle_image(Direction direction)
 {
-    switch (direction)
-    {
-        case Up:    return middleU;
-        case Down:  return middleD;
-        case Left:  return middleL;
-        case Right: return middleR;
-        default:    exit(1);
-    }
+    return middle_imgs[direction];
 }
 
 SDL_Surface* hallway_image(Direction direction)
 {
-    switch (direction)
-    {
-        case Up:    return hallwayU;
-        case Down:  return hallwayD;
-        case Left:  return hallwayL;
-        case Right: return hallwayR;
-        default:    exit(1);
-    }
+    return hallway_imgs[direction];
 }
 
 SDL_Surface* tleft_image(DiagDirection direction)
 {
-    switch(direction)
-    {
-        case TopLeft:      return tleftTL;
-        case TopRight:     return tleftTR;
-        case BottomLeft:   return tleftBL;
-        case BottomRight:  return tleftBR;
-        default:            exit(1);
-    } 
+    return tleft_imgs[direction]; 
 }
 
 SDL_Surface* tright_image(DiagDirection direction)
 {
-    switch(direction)
-    {
-        case TopLeft:      return trightTL;
-        case TopRight:     return trightTR;
-        case BottomLeft:   return trightBL;
-        case BottomRight:  return trightBR;
-        default:            exit(1);
-    } 
+    return tright_imgs[direction];
 }
 
 SDL_Surface* pen_corner_image(DiagDirection direction)
 {
-    switch(direction)
-    {
-        case TopLeft:      return penTL;
-        case TopRight:     return penTR;
-        case BottomLeft:   return penBL;
-        case BottomRight:  return penBR;
-        default:            exit(1);
-    } 
+    return pen_imgs[direction];
 }
 
 SDL_Surface* pen_side_image(Direction direction)
 {
-    switch(direction)
-    {
-        case Up:        return penSideU;
-        case Down:      return penSideD;
-        case Left:      return penSideL;
-        case Right:     return penSideR;
-        default:            exit(1);
-    } 
+    return penSide_imgs[direction];
 }
 
 SDL_Surface* pen_gate_image(void)
