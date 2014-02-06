@@ -3,7 +3,7 @@
 #include <SDL/SDL.h>
 #include <stdbool.h>
 
-#include "main.h"
+#include "direction.h"
 
 #define MAX_KEYS 323
 

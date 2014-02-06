@@ -1,9 +1,8 @@
 #pragma once
 
 #include "board.h"
-#include "main.h"
+#include "direction.h"
 #include "pacman.h"
-//#include "physics.h"
 
 typedef enum 
 {

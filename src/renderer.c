@@ -88,7 +88,7 @@ void draw_vanity_animation(int dt)
 	//TODO do this later
 	if (dt)
 	{
-		
+
 	}
 }
 
@@ -389,7 +389,7 @@ void draw_pacman_lives(int numLives)
 {
 	int x = 2 * 16;
 	int y = 34 * 16;
-
+	
 	for (int i = 0; i < numLives; i++)
 	{
 		apply_surface(x, y, pacman_life_image());

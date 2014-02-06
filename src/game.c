@@ -238,7 +238,6 @@ static void enter_state(PacmanGame *game, GameState state)
 			game->pacman.livesLeft--;
 
 			break;
-
 		case WinState:
 			game->currentLevel++;
 			game->gameState = LevelBeginState;
@@ -443,8 +442,6 @@ static void process_fruit(PacmanGame *game)
 
 	if (f1->fruitMode == Displaying)
 	{
-		//printf("f1 x=%d, y=%d\n", f1->x, f1->y);
-		//printf("pac x=%d, y=%d\n", pac->x, pac->y);
 		if (f1dt > f1->displayTime) f1->fruitMode = Displayed;
 	}
 
@@ -524,6 +521,7 @@ void gamestart_init(PacmanGame *game)
 {
 	level_init(game);
 
+	pacman_init(&game->pacman);
 	//we need to reset all fruit
 	//fuit_init();
 	game->highscore = 0;	//TODO maybe load this in from a file..?
@@ -550,7 +548,6 @@ void level_init(PacmanGame *game)
 	reset_fruit(&game->gameFruit2);
 }
 
-
 //TODO: make this method based on a state, not a conditional
 //or make the menu system the same. Just make it consistant
 bool is_game_over(PacmanGame *game)
@@ -573,7 +570,6 @@ int int_length(int x)
     if (x >= 10) 		 return 2;
     return 1;
 }
-
 
 static bool resolve_telesquare(PhysicsBody *body)
 {

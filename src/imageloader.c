@@ -583,93 +583,93 @@ SDL_Surface** get_spec_images(void)
     return specImages;
 }
 
-SDL_Surface* double_corner_image(diag_orientation orientation)
+SDL_Surface* double_corner_image(DiagDirection direction)
 {
-    switch(orientation)
+    switch(direction)
     {
-        case TOP_LEFT:      return double_cornerTL;
-        case TOP_RIGHT:     return double_cornerTR;
-        case BOTTOM_LEFT:   return double_cornerBL;
-        case BOTTOM_RIGHT:  return double_cornerBR;
+        case TopLeft:      return double_cornerTL;
+        case TopRight:     return double_cornerTR;
+        case BottomLeft:   return double_cornerBL;
+        case BottomRight:  return double_cornerBR;
         default:            exit(1);
     }
 }
 
-SDL_Surface* single_corner_image(diag_orientation orientation)
+SDL_Surface* single_corner_image(DiagDirection direction)
 {
-    switch(orientation)
+    switch(direction)
     {
-        case TOP_LEFT:      return single_cornerTL;
-        case TOP_RIGHT:     return single_cornerTR;
-        case BOTTOM_LEFT:   return single_cornerBL;
-        case BOTTOM_RIGHT:  return single_cornerBR;
+        case TopLeft:      return single_cornerTL;
+        case TopRight:     return single_cornerTR;
+        case BottomLeft:   return single_cornerBL;
+        case BottomRight:  return single_cornerBR;
         default:            exit(1);
     } 
 }
 
-SDL_Surface* middle_image(verthoro_orientation orientation)
+SDL_Surface* middle_image(Direction direction)
 {
-    switch (orientation)
+    switch (direction)
     {
-        case UP:    return middleU;
-        case DOWN:  return middleD;
-        case LEFT:  return middleL;
-        case RIGHT: return middleR;
+        case Up:    return middleU;
+        case Down:  return middleD;
+        case Left:  return middleL;
+        case Right: return middleR;
         default:    exit(1);
     }
 }
 
-SDL_Surface* hallway_image(verthoro_orientation orientation)
+SDL_Surface* hallway_image(Direction direction)
 {
-    switch (orientation)
+    switch (direction)
     {
-        case UP:    return hallwayU;
-        case DOWN:  return hallwayD;
-        case LEFT:  return hallwayL;
-        case RIGHT: return hallwayR;
+        case Up:    return hallwayU;
+        case Down:  return hallwayD;
+        case Left:  return hallwayL;
+        case Right: return hallwayR;
         default:    exit(1);
     }
 }
 
-SDL_Surface* tleft_image(diag_orientation orientation)
+SDL_Surface* tleft_image(DiagDirection direction)
 {
-    switch(orientation)
+    switch(direction)
     {
-        case TOP_LEFT:      return tleftTL;
-        case TOP_RIGHT:     return tleftTR;
-        case BOTTOM_LEFT:   return tleftBL;
-        case BOTTOM_RIGHT:  return tleftBR;
+        case TopLeft:      return tleftTL;
+        case TopRight:     return tleftTR;
+        case BottomLeft:   return tleftBL;
+        case BottomRight:  return tleftBR;
         default:            exit(1);
     } 
 }
 
-SDL_Surface* tright_image(diag_orientation orientation)
+SDL_Surface* tright_image(DiagDirection direction)
 {
-    switch(orientation)
+    switch(direction)
     {
-        case TOP_LEFT:      return trightTL;
-        case TOP_RIGHT:     return trightTR;
-        case BOTTOM_LEFT:   return trightBL;
-        case BOTTOM_RIGHT:  return trightBR;
+        case TopLeft:      return trightTL;
+        case TopRight:     return trightTR;
+        case BottomLeft:   return trightBL;
+        case BottomRight:  return trightBR;
         default:            exit(1);
     } 
 }
 
-SDL_Surface* pen_corner_image(diag_orientation orientation)
+SDL_Surface* pen_corner_image(DiagDirection direction)
 {
-    switch(orientation)
+    switch(direction)
     {
-        case TOP_LEFT:      return penTL;
-        case TOP_RIGHT:     return penTR;
-        case BOTTOM_LEFT:   return penBL;
-        case BOTTOM_RIGHT:  return penBR;
+        case TopLeft:      return penTL;
+        case TopRight:     return penTR;
+        case BottomLeft:   return penBL;
+        case BottomRight:  return penBR;
         default:            exit(1);
     } 
 }
 
-SDL_Surface* pen_side_image(verthoro_orientation orientation)
+SDL_Surface* pen_side_image(Direction direction)
 {
-    switch(orientation)
+    switch(direction)
     {
         case Up:        return penSideU;
         case Down:      return penSideD;

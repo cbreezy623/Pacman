@@ -5,6 +5,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+#include "direction.h"
 #include "main.h"
 #include "fruit.h"
 #include "ghost.h"
@@ -13,22 +14,6 @@
 #define NUM_NUM_IMAGES 10
 #define NUM_SPEC_IMAGES 7
 
-typedef enum 
-{
-	TOP_LEFT, 
-	TOP_RIGHT, 
-	BOTTOM_LEFT, 
-	BOTTOM_RIGHT
-} diag_orientation;
-
-typedef enum 
-{
-	UP, 
-	DOWN, 
-	LEFT, 
-	RIGHT
-} verthoro_orientation; 
-
 void load_images(void);
 void dispose_images(void);
 
@@ -36,17 +21,17 @@ void dispose_images(void);
 //Warning: this allocates memory and the created surface will need to be disposed
 SDL_Surface *clone_image(SDL_Surface* toClone);
 
-SDL_Surface* double_corner_image(diag_orientation orientation);
-SDL_Surface* single_corner_image(diag_orientation orientation);
+SDL_Surface* double_corner_image(DiagDirection direction);
+SDL_Surface* single_corner_image(DiagDirection direction);
 
-SDL_Surface* tleft_image(diag_orientation orientation);
-SDL_Surface* tright_image(diag_orientation orientation);
+SDL_Surface* tleft_image(DiagDirection direction);
+SDL_Surface* tright_image(DiagDirection direction);
 
-SDL_Surface* middle_image(verthoro_orientation orientation);
-SDL_Surface* hallway_image(verthoro_orientation orientation);
+SDL_Surface* middle_image(Direction direction);
+SDL_Surface* hallway_image(Direction direction);
 
-SDL_Surface* pen_corner_image(diag_orientation orientation);
-SDL_Surface* pen_side_image(verthoro_orientation orientation);
+SDL_Surface* pen_corner_image(DiagDirection direction);
+SDL_Surface* pen_side_image(Direction direction);
 SDL_Surface* pen_gate_image(void);
 
 SDL_Surface* small_pellet_image(void);

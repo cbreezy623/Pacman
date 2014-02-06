@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "main.h"
+#include "direction.h"
 
 //Defines a body which has a position
 typedef struct

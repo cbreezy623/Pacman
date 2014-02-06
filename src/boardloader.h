@@ -1,6 +1,5 @@
 #pragma once
 
-#include "imageloader.h"
 #include "board.h"
 #include "pellet.h"
 

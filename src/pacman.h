@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "main.h"
+#include "direction.h"
 #include "physics.h"
 
 //pacman has a location (x,y) on the board. This is the tile his center is, and it defines his actual tile
