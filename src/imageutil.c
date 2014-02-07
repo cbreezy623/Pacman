@@ -1,5 +1,7 @@
 #include "imageutil.h"
 
+#include <SDL/SDL_gfxPrimitives.h>
+
 SDL_Surface* clone_image(SDL_Surface* src)
 {
     return SDL_ConvertSurface(src, src->format, SDL_SWSURFACE);

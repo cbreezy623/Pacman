@@ -1,7 +1,5 @@
 #include "text.h"
 
-#include <SDL/SDL_gfxPrimitives.h>
-
 #include "imageloader.h"
 #include "imageutil.h"
 
