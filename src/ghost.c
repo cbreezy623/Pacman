@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 void ghosts_init(Ghost ghosts[4])
 {
 	ghosts[0].ghostType = Blinky;

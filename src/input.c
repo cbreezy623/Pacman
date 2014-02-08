@@ -48,6 +48,16 @@ bool dir_key_held(Direction direction)
     exit(1);
 }
 
+bool dir_pressed_now(Direction *dir)
+{
+    if (keysHeld[SDLK_UP]    || keysHeld[SDLK_w]) {*dir = Up;    return true; }
+    if (keysHeld[SDLK_LEFT]  || keysHeld[SDLK_a]) {*dir = Left;  return true; }
+    if (keysHeld[SDLK_DOWN]  || keysHeld[SDLK_s]) {*dir = Down;  return true; }
+    if (keysHeld[SDLK_RIGHT] || keysHeld[SDLK_d]) {*dir = Right; return true; }
+
+    return false;
+}
+
 bool key_held(int keycode)
 {
     check_keycode(keycode);

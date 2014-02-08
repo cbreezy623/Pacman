@@ -20,6 +20,12 @@ void handle_keyup(int keycode);
 //A direction can be bound to multiple keypressed, making this function input-method agnostic.
 bool dir_key_held(Direction direction);
 
+//If a directional key was pressed this tick, this function returns true
+//and stores the pressed direction in the given pointer.
+//If multiple directions were pressed at once, this function prioritises Up, Left, Down, Right.
+//If no direction was pressed this tick, this function simply returns false. 
+bool dir_pressed_now(Direction *direction);
+
 //Tests if a particular key is pressed. Uses the SDLK keycode constants.
 bool key_held(int key);
 

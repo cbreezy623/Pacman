@@ -24,5 +24,8 @@ bool collides_accurate(PhysicsBody *body1, PhysicsBody *body2);
 bool collides_obj(PhysicsBody *body, int otherX, int otherY);
 
 //Advances the body 1 step based on current direction and velocity.
-//Returns true if the body changed square during the move, false otherwise
+//Returns true if the body changed square (a complete tile) during the move, false otherwise
 bool move(PhysicsBody *body);
+
+//Returns true if the body is 
+bool on_center(PhysicsBody *body);

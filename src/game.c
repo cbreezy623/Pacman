@@ -2,6 +2,7 @@
 
 #include "animation.h"
 #include "board.h"
+#include "fps.h"
 #include "input.h"
 #include "main.h"
 #include "pacman.h"
@@ -16,9 +17,10 @@ static void process_player(PacmanGame *game);
 static void process_fruit(PacmanGame *game);
 static void process_ghosts(PacmanGame *game);
 static void process_pellets(PacmanGame *game);
+
 static bool check_pacghost_collision(PacmanGame *game);			//return true if pacman collided with any ghosts
-static void enter_state(PacmanGame *game, GameState state);
-static bool resolve_telesquare(PhysicsBody *body);		//wraps the body around if they've gone tele square
+static void enter_state(PacmanGame *game, GameState state);		//transitions to/ from a state
+static bool resolve_telesquare(PhysicsBody *body);				//wraps the body around if they've gone tele square
 
 void game_tick(PacmanGame *game)
 {
@@ -56,14 +58,7 @@ void game_tick(PacmanGame *game)
 			//pellets + ghosts + pacman appear again
 			//go to start level mode
 
-			if (dt > 2000)
-			{
-				
-				
-			}
-
 			break;
-
 		case DeathState:
 			// pacman has been eaten by a ghost and everything stops moving
 			// he then does death animation and game starts again
@@ -76,7 +71,6 @@ void game_tick(PacmanGame *game)
 
 
 			break;
-
 		case GameoverState:
 			// pacman has lost all his lives
 			//it displays "game over" briefly, then goes back to main menu
@@ -217,7 +211,6 @@ void game_render(PacmanGame *game)
 				draw_pacman_death(&game->pacman, dt - 1000);
 			}
 
-
 			draw_large_pellets(&game->pelletHolder, true);
 			draw_board(&game->board);
 			break;
@@ -306,11 +299,6 @@ static void process_player(PacmanGame *game)
 	Pacman *pacman = &game->pacman;
 	Board *board = &game->board;
 	
-	Direction newDir;
-
-	int x = 0;
-	int y = 0;
-
 	//first do pacmans missed frames
 	if (pacman->missedFrames != 0)
 	{
@@ -318,12 +306,9 @@ static void process_player(PacmanGame *game)
 		return;
 	}
 
-	if 		(dir_key_held(Left)) 	{ x = -1; newDir = Left;  }
-	else if (dir_key_held(Right))	{ x =  1; newDir = Right; }
-	else if (dir_key_held(Up))		{ y = -1; newDir = Up; 	  }
-	else if (dir_key_held(Down))	{ y =  1; newDir = Down;  }
+	Direction newDir;
 
-	bool dirPressed = x != 0 || y != 0;
+	bool dirPressed = dir_pressed_now(&newDir);
 
 	//the game remembers what the last direction the player pressed was
 	//if pacman gets into a situation in which he is stuck, the currently facing direction becomes the 
@@ -335,9 +320,8 @@ static void process_player(PacmanGame *game)
 	}
 
 	//pacman will move in whatever direction he is currently in, until he hits a wall
-	//if the play is holding a button down at the same point in time in which pacman can move in a new direction
+	//if the player is holding a button down at the same point in time in which pacman can move in a new direction
 	//he moves that way, and that new direction becomes the currently moved direction
-	//printf("pacman: (%d, %d)  (%d, %d) \n", pacman->x, pacman->y, pacman->xTileOffset, pacman->yTileOffset);
 	
 	//if user has a dir pressed, try move pacman in the direction the user has selected
 	if (dirPressed && can_move(pacman, board, newDir))
@@ -353,8 +337,8 @@ static void process_player(PacmanGame *game)
 	}
 	else
 	{
-		pacman->movementType = Stuck;
 		//user hasn't moved in a valid direction or pacman can't move in his default direction
+		pacman->movementType = Stuck;
 		return;
 	}
 
@@ -391,7 +375,7 @@ static void process_ghosts(PacmanGame *game)
 			continue;
 		}
 
-		//all other modes can move normally (I think,)
+		//all other modes can move normally (I think)
 
 		if (g->body.xOffset == 0 && g->body.yOffset == 0)
 		{

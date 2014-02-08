@@ -3,8 +3,13 @@
 #include "imageloader.h"
 #include "imageutil.h"
 
+//Gets the image for the specified character.
 static SDL_Surface *get_surface(char c);
+
+//Gets the appropriate SDL_Color object for the given color.
 static SDL_Color get_color(TextColor color);
+
+//Sets the image to the given color.
 static void set_fontimage_color(SDL_Surface *image, TextColor color);
 
 static TextColor textColor;
@@ -79,7 +84,6 @@ bool is_valid_string(const char *text)
 
 	return true;
 }
-
 
 void dispose_text(void)
 {

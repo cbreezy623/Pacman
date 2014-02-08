@@ -1,6 +1,6 @@
 #include "animation.h"
 
-#include "main.h"
+#include "fps.h"
 
 int animation_getframe(Animation *animation)
 {

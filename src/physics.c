@@ -17,14 +17,10 @@ bool collides_accurate(PhysicsBody *body1, PhysicsBody *body2)
 
 bool move(PhysicsBody *body)
 {
-	int xDir;
-	int yDir;
+	int xDir = 0;
+	int yDir = 0;
 
-	//TODO: maybe introduce a Point struct and move this logic into the definition for Direction
-	if 		(body->dir == Left)  { xDir = -1; yDir =  0; }
-	else if (body->dir == Right) { xDir =  1; yDir =  0; }
-	else if (body->dir == Up)    { xDir =  0; yDir = -1; }
-	else                         { xDir =  0; yDir =  1; }
+	dir_xy(body->dir, &xDir, &yDir);
 
 	body->xOffset += xDir * body->velocity;
 	body->yOffset += yDir * body->velocity;
@@ -61,4 +57,9 @@ bool move(PhysicsBody *body)
 	}
 
 	return false;
+}
+
+bool on_center(PhysicsBody *body)
+{
+	return body->xOffset == 0 && body->yOffset == 0;
 }

@@ -16,6 +16,19 @@ typedef enum
 	GameoverState
 } GameState;
 
+//what you do in current state
+
+//what causes you to transition from state A -> state B
+
+
+//elevator stationary
+	//action: do nothing
+	//transition
+		//-> moving up (someone presses a button upstairs)
+		//-> moving down (someone presses a button downstairs)
+		//-> door opening (someone presses button on current level)
+		//-> go down/ up (timeout on a specific level)
+
 typedef struct 
 {
 	GameState gameState;

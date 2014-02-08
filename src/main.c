@@ -3,11 +3,11 @@
 #include <stdbool.h>
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_framerate.h>
 #include <SDL/SDL_image.h>
 
 #include "board.h"
 #include "boardloader.h"
+#include "fps.h"
 #include "game.h"
 #include "input.h"
 #include "intermission.h"
@@ -32,9 +32,6 @@ static void clean_up(void);
 //Performs a loop, updating and rendering at 60hz.
 static void main_loop(void);
 
-//Sleeps until 60hz is reached.
-static void internal_fps_sleep(void);
-
 //Defers to appropriate tick, based on current state.
 static void internal_tick(void);
 
@@ -51,12 +48,8 @@ static ProgramState state;
 static MenuSystem menuSystem;
 static PacmanGame pacmanGame;
 
-static FPSmanager fpsManager;
-
 static bool gameRunning = true;
 static int numCredits = 0;
-
-static int numTicks = 0;
 
 int main(void)
 {
@@ -79,14 +72,8 @@ static void main_loop(void)
         internal_tick();
         internal_render();
 
-        internal_fps_sleep();
+        fps_sleep();
     }
-}
-
-static void internal_fps_sleep(void)
-{
-    numTicks++;
-    SDL_framerateDelay(&fpsManager);
 }
 
 static void internal_tick(void)
@@ -148,7 +135,7 @@ static void game_init(void)
     state = Menu;
 
     //init the framerate manager
-    SDL_setFramerate(&fpsManager, key_held(SDLK_SPACE) ? 200 : 60);
+    fps_init(60);
 
     menu_init(&menuSystem);
 }
@@ -213,7 +200,7 @@ static void key_down_hacks(int keycode)
     static bool rateSwitch = false;
 
     //TODO: remove this hack and try make it work with the physics body
-    if (keycode == SDLK_SPACE) SDL_setFramerate(&fpsManager, (rateSwitch = !rateSwitch) ? 200 : 60);
+    if (keycode == SDLK_SPACE) fps_sethz((rateSwitch = !rateSwitch) ? 200 : 60);
 
     //TODO: move logic into the tick method of the menu
     if (state == Menu && keycode == SDLK_5 && numCredits < 99) 
@@ -225,24 +212,4 @@ static void key_down_hacks(int keycode)
 int num_credits(void)
 {
     return numCredits;
-}
-
-unsigned int ticks_game(void)
-{
-    return SDL_GetTicks();
-}
-
-unsigned int ticks_startup()
-{
-    return SDL_GetTicks();
-}
-
-unsigned int frames_game(void)
-{
-    return numTicks;
-}
-
-unsigned int frames_startup(void)
-{
-    return numTicks;
 }

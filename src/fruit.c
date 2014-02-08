@@ -4,7 +4,7 @@
 #include <SDL/SDL.h>
 
 #include "fruit.h"
-#include "main.h"
+#include "fps.h"
 
 // Refer to fruitinfo for implementation details
 
