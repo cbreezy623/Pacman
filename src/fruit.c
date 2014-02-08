@@ -1,12 +1,11 @@
+#include "fruit.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <SDL/SDL.h>
 
-#include "fruit.h"
 #include "fps.h"
-
-// Refer to fruitinfo for implementation details
 
 int fruit_points(Fruit fruit)
 {
@@ -69,8 +68,6 @@ void regen_fruit(GameFruit *gameFruit, int level)
 	gameFruit->startedAt = ticks_game();
 }
 
-//each fruit is on screen for between 9 and 10 seconds
-//the fruit type/ level number etc does not matter, the number is just randomly generated between these
 int rand_fruit_visible_time(void)
 {
 	// chosen by a random number generator
