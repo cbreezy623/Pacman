@@ -22,24 +22,29 @@ void reset_ghost(Ghost *ghost, GhostType type)
 	int x, y;
 	int ox, oy;
 	Direction dir;
+	Direction next;
 	MovementMode mode;
 
 	switch (type)
 	{
-		case Blinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
-		//case Inky:		{ x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
-		//case Clyde:		{ x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   break; }
-		//case Pinky:		{ x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; break; }
+		case Blinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		//case Inky:		{ x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
+		//case Clyde:		{ x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
+		//case Pinky:		{ x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; next = Down; break; }
 
 		//testing
-		case Inky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
-		case Clyde:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
-		case Pinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; break; }
+		case Inky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		case Clyde:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		case Pinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
 
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
 
-	ghost->body = (PhysicsBody) { x, y, ox, oy, dir, 1};
+	ghost->body = (PhysicsBody) { x, y, ox, oy, dir, next, 100};
+	ghost->body.xOffsetInternal = 0;
+	ghost->body.yOffsetInternal = 0;
+	ghost->body.velocity = 100;
+
 	ghost->movementMode = mode;
 	ghost->movementMode = mode;
 	ghost->transDirection = Left;
@@ -167,7 +172,7 @@ void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman)
 	int targetOffsetY = 0;
 	
 	//use dir_xy_buggy to get 4 up AND 4 left, as per bug in original game
-	dir_xy_buggy(pacman->body.dir, &targetOffsetX, &targetOffsetY);
+	dir_xy_buggy(pacman->body.curDir, &targetOffsetX, &targetOffsetY);
 
 	targetOffsetX *= 4;
 	targetOffsetY *= 4;
@@ -204,7 +209,7 @@ void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman)
 	int offsetY = 0;
 	
 	//use dir_xy_buggy to get 2 up AND 2 left, as per bug in original game
-	dir_xy_buggy(pacman->body.dir, &offsetX, &offsetY);
+	dir_xy_buggy(pacman->body.curDir, &offsetX, &offsetY);
 
 	offsetX *= 2;
 	offsetY *= 2;
@@ -220,4 +225,26 @@ void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman)
 	
 	blueGhost->targetX = targetX;
 	blueGhost->targetY = targetY;
+}
+
+int ghost_speed_normal(int level)
+{
+	if (level == 1)  return 75;
+	if (level <= 4)  return 85;
+	if (level <= 20) return 95;
+	return 95;
+}
+int ghost_speed_fright(int level)
+{
+	if (level == 1)  return 50;
+	if (level <= 4)  return 55;
+	if (level <= 20) return 60;
+	return 100;	//ghosts don't get into frightened mode past this
+}
+int ghost_speed_tunnel(int level)
+{
+	if (level == 1)  return 40;
+	if (level <= 4)  return 45;
+	if (level <= 20) return 50;
+	return 50;
 }

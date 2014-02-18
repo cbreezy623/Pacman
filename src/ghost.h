@@ -48,3 +48,7 @@ void execute_red_logic(Ghost *redGhost, Pacman *pacman);
 void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman);
 void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman);
 void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman);
+
+int ghost_speed_normal(int level);
+int ghost_speed_fright(int level);
+int ghost_speed_tunnel(int level);

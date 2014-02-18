@@ -38,3 +38,9 @@ void pacman_level_init(Pacman *pacman);
 
 //Initializes pacman's location to the starting point (as well as direction and other values).
 void pacman_location_init(Pacman *pacman);
+
+//Returns pacman speed for given level when not in fright mode.
+int pacman_speed_normal(int level);
+
+//Returns pacman speed for given level when in fright mode.
+int pacman_speed_fright(int level);

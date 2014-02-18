@@ -326,7 +326,7 @@ void draw_pacman(Pacman *pacman)
 	}
 	else
 	{
-		aniDir = pacman->body.dir;
+		aniDir = pacman->body.curDir;
 		frame = animation_get_frame(50, 4);
 	}
 
@@ -404,7 +404,7 @@ void draw_pacman_lives(int numLives)
 
 void draw_ghost(Ghost *ghost)
 {
-	SDL_Surface *image = ghost_image(ghost->ghostType, ghost->body.dir, 0);
+	SDL_Surface *image = ghost_image(ghost->ghostType, ghost->body.curDir, 0);
 
 	int x = ghost->body.x;
 	int y = ghost->body.y + Y_OFFSET;

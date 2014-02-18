@@ -98,7 +98,7 @@ void game_tick(PacmanGame *game)
 		case GamePlayState:
 			
 			//TODO: remove this hacks
-			if (key_held(SDLK_0)) enter_state(game, DeathState);
+			if (key_held(SDLK_K)) enter_state(game, DeathState);
 
 			else if (allPelletsEaten) enter_state(game, WinState);
 			else if (collidedWithGhost) enter_state(game, DeathState); 
@@ -274,13 +274,13 @@ static void enter_state(PacmanGame *game, GameState state)
 bool can_move(Pacman *pacman, Board *board, Direction dir)
 {
 	//easy edge cases, tile has to be parallal with a direction to move it
-	if ((dir == Up   || dir == Down ) && pacman->body.xOffset != 0) return false;
-	if ((dir == Left || dir == Right) && pacman->body.yOffset != 0) return false;
+	if ((dir == Up   || dir == Down ) && !on_vert(&pacman->body)) return false;
+	if ((dir == Left || dir == Right) && !on_horo(&pacman->body)) return false;
 
 	//if pacman wants to move on an axis and he is already partially on that axis (not 0)
 	//it is always a valid move
-	if ((dir == Left || dir == Right) && pacman->body.xOffset != 0) return true;
-	if ((dir == Up   || dir == Down ) && pacman->body.yOffset != 0) return true;
+	if ((dir == Left || dir == Right) && !on_vert(&pacman->body)) return true;
+	if ((dir == Up   || dir == Down ) && !on_horo(&pacman->body)) return true;
 
 	//pacman is at 0/0 and moving in the requested direction depends on if there is a valid tile there
 	int x = 0;
@@ -328,10 +328,10 @@ static void process_player(PacmanGame *game)
 	{
 		//printf("valid move\n");
 		//just replace pacmans current direction
-		pacman->body.dir = newDir;
+		pacman->body.curDir = newDir;
 		pacman->movementType = Unstuck;
 	}
-	else if (can_move(pacman, board, pacman->body.dir))
+	else if (can_move(pacman, board, pacman->body.curDir))
 	{
 		pacman->movementType = Unstuck;		
 	}
@@ -342,7 +342,7 @@ static void process_player(PacmanGame *game)
 		return;
 	}
 
-	move(&pacman->body);
+	move_pacman(&pacman->body);
 	resolve_telesquare(&pacman->body);
 }
 
@@ -355,11 +355,12 @@ static void process_ghosts(PacmanGame *game)
 		if (g->movementMode == InPen)
 		{
 			//ghosts bob up and down - move in direction. If they hit a square, change direction
-			bool moved = move(&g->body);
+			bool moved = move_ghost(&g->body);
 
 			if (moved && (g->body.y == 13 || g->body.y == 15))
 			{
-				g->body.dir = dir_opposite(g->body.dir);
+				g->body.nextDir = g->body.curDir;
+				g->body.curDir = dir_opposite(g->body.curDir);
 			}
 
 			continue;
@@ -375,26 +376,23 @@ static void process_ghosts(PacmanGame *game)
 			continue;
 		}
 
-		//all other modes can move normally (I think)
-
-		if (g->body.xOffset == 0 && g->body.yOffset == 0)
-		{
-			//they've hit the center of a tile, so change their current direction to the new direction
-			g->body.dir = g->transDirection;
-			g->transDirection = g->nextDirection;
-		}
-		
-		bool changedTile;
-
-		changedTile = move(&g->body);
+		//all other modes can move normally (I think)		
+		MovementResult result = move_ghost(&g->body);
 		resolve_telesquare(&g->body);
 
-		if (changedTile)
+		if (result == NewSquare)
 		{
 			//if they are in a new tile, rerun their target update logic
 			execute_ghost_logic(g, g->ghostType, &game->ghosts[0], &game->pacman);
 
 			g->nextDirection = next_direction(g, &game->board);
+		}
+		else if (result == OverCenter)
+		{
+			//they've hit the center of a tile, so change their current direction to the new direction
+			g->body.curDir = g->transDirection;
+			g->body.nextDir = g->nextDirection;
+			g->transDirection = g->nextDirection;
 		}
 	}
 }
