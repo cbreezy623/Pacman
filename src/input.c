@@ -50,10 +50,10 @@ bool dir_key_held(Direction direction)
 
 bool dir_pressed_now(Direction *dir)
 {
-    if (keysHeld[SDLK_UP]    || keysHeld[SDLK_w]) {*dir = Up;    return true; }
-    if (keysHeld[SDLK_LEFT]  || keysHeld[SDLK_a]) {*dir = Left;  return true; }
-    if (keysHeld[SDLK_DOWN]  || keysHeld[SDLK_s]) {*dir = Down;  return true; }
-    if (keysHeld[SDLK_RIGHT] || keysHeld[SDLK_d]) {*dir = Right; return true; }
+    if (keysHeld[SDLK_UP]    || keysHeld[SDLK_w]) { *dir = Up;    return true; }
+    if (keysHeld[SDLK_LEFT]  || keysHeld[SDLK_a]) { *dir = Left;  return true; }
+    if (keysHeld[SDLK_DOWN]  || keysHeld[SDLK_s]) { *dir = Down;  return true; }
+    if (keysHeld[SDLK_RIGHT] || keysHeld[SDLK_d]) { *dir = Right; return true; }
 
     return false;
 }

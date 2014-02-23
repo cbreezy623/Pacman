@@ -98,7 +98,7 @@ void game_tick(PacmanGame *game)
 		case GamePlayState:
 			
 			//TODO: remove this hacks
-			if (key_held(SDLK_K)) enter_state(game, DeathState);
+			if (key_held(SDLK_k)) enter_state(game, DeathState);
 
 			else if (allPelletsEaten) enter_state(game, WinState);
 			else if (collidedWithGhost) enter_state(game, DeathState); 
@@ -298,51 +298,94 @@ static void process_player(PacmanGame *game)
 {
 	Pacman *pacman = &game->pacman;
 	Board *board = &game->board;
-	
-	//first do pacmans missed frames
+
 	if (pacman->missedFrames != 0)
 	{
 		pacman->missedFrames--;
 		return;
 	}
 
+	Direction oldLastAttemptedDir = pacman->lastAttemptedMoveDirection;
+
 	Direction newDir;
 
 	bool dirPressed = dir_pressed_now(&newDir);
 
-	//the game remembers what the last direction the player pressed was
-	//if pacman gets into a situation in which he is stuck, the currently facing direction becomes the 
-	//last pressed direction (weird behaviour, but let's roll with it)
-	if (dirPressed && pacman->movementType != Stuck)
+	if (dirPressed)
 	{
-		// TODO, fix this up
+		//user wants to move in a direction
 		pacman->lastAttemptedMoveDirection = newDir;
+
+		//if player holds opposite direction to current walking dir
+		//we can always just switch current walking direction
+		//since we're on parallel line
+		if (newDir == dir_opposite(pacman->body.curDir))
+		{
+			pacman->body.curDir = newDir;
+			pacman->body.nextDir = newDir;
+		}
+
+		//if pacman was stuck before just set his current direction as pressed
+		if (pacman->movementType == Stuck)
+		{
+			pacman->body.curDir = newDir;
+		}
+
+		pacman->body.nextDir = newDir;
+	}
+	else if (pacman->movementType == Stuck)
+	{
+		//pacman is stuck and player didn't move - player should still be stuck.
+		//don't do anything
+		return;
+	}
+	else 
+	{
+		//user doesn't want to change direction and pacman isn't stuck
+		//pacman can move like normal
+
+		//just set the next dir to current dir
+		pacman->body.nextDir = pacman->body.curDir;
 	}
 
-	//pacman will move in whatever direction he is currently in, until he hits a wall
-	//if the player is holding a button down at the same point in time in which pacman can move in a new direction
-	//he moves that way, and that new direction becomes the currently moved direction
-	
-	//if user has a dir pressed, try move pacman in the direction the user has selected
-	if (dirPressed && can_move(pacman, board, newDir))
+	pacman->movementType = Unstuck;
+
+	int curDirX = 0;
+	int curDirY = 0;
+	int nextDirX = 0;
+	int nextDirY = 0;
+
+	dir_xy(pacman->body.curDir, &curDirX, &curDirY);
+	dir_xy(pacman->body.nextDir, &nextDirX, &nextDirY);
+
+	int newCurX = pacman->body.x + curDirX;
+	int newCurY = pacman->body.y + curDirY;
+	int newNextX = pacman->body.x + nextDirX;
+	int newNextY = pacman->body.y + nextDirY;
+
+	bool canMoveCur =  is_valid_square(board, newCurX, newCurY) || is_tele_square(newCurX, newCurY);
+	bool canMoveNext = is_valid_square(board, newNextX, newNextY) || is_tele_square(newNextX, newNextY);
+
+	//if pacman is currently on a center tile and can't move in either direction
+	//don't move him
+	if (on_center(&pacman->body) && !canMoveCur && !canMoveNext)
 	{
-		//printf("valid move\n");
-		//just replace pacmans current direction
-		pacman->body.curDir = newDir;
-		pacman->movementType = Unstuck;
+		pacman->movementType = Stuck;
+		pacman->lastAttemptedMoveDirection = oldLastAttemptedDir;
+
+		return;
 	}
-	else if (can_move(pacman, board, pacman->body.curDir))
+
+	move_pacman(&pacman->body, canMoveCur, canMoveNext);
+
+	//if pacman is on the center, and he couldn't move either of  his last directions
+	//he must be stuck now
+	if (on_center(&pacman->body) && !canMoveCur && !canMoveNext)
 	{
-		pacman->movementType = Unstuck;		
-	}
-	else
-	{
-		//user hasn't moved in a valid direction or pacman can't move in his default direction
 		pacman->movementType = Stuck;
 		return;
 	}
 
-	move_pacman(&pacman->body);
 	resolve_telesquare(&pacman->body);
 }
 

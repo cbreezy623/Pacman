@@ -40,10 +40,10 @@ void reset_ghost(Ghost *ghost, GhostType type)
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
 
-	ghost->body = (PhysicsBody) { x, y, ox, oy, dir, next, 100};
+	ghost->body = (PhysicsBody) { x, y, ox, oy, dir, next, 100, 0, 0};
 	ghost->body.xOffsetInternal = 0;
 	ghost->body.yOffsetInternal = 0;
-	ghost->body.velocity = 100;
+	ghost->body.velocity = 80;
 
 	ghost->movementMode = mode;
 	ghost->movementMode = mode;

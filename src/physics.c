@@ -30,19 +30,23 @@ MovementResult move_ghost(PhysicsBody *body)
 
 	dir_xy(body->curDir, &xDir, &yDir);
 
-	int MULT_VALUE = 4500;
+	int BASE_VALUE = 75;
+	int MULT_VALUE = 60;
 
 	//our pixel value for the velocity 
 	//range between 1800 for v==40, to 4725 for v==105
-	int velPixValue = (body->velocity / 100.0f) * MULT_VALUE;
+	int velPixValue = (body->velocity / 100.0f) * BASE_VALUE;
+	
+	int divide = velPixValue / MULT_VALUE;
+	int remain = velPixValue % MULT_VALUE;
 
-	//add any new speed to current pixel position (only useful for velocity >= 100)
-	body->xOffset += (velPixValue / MULT_VALUE) * xDir;
-	body->yOffset += (velPixValue / MULT_VALUE) * yDir;
+	//add any new speed to current pixel position (only useful for velocity >= 80)
+	body->xOffset += divide * xDir;
+	body->yOffset += divide * yDir;
 
-	//add any new carry to current carry (always useful except for velocity == 100)
-	body->xOffsetInternal += (velPixValue % MULT_VALUE) * xDir;
-	body->yOffsetInternal += (velPixValue % MULT_VALUE) * yDir;
+	//add any new carry to current carry (always useful except for velocity == 80)
+	body->xOffsetInternal += remain * xDir;
+	body->yOffsetInternal += remain * yDir;
 
 	//add any new pixels we've introduced with our carry
 	//this value will be non-zero if we have introduced enough carry
@@ -263,48 +267,154 @@ MovementResult move_ghost_old(PhysicsBody *body)
 	return result;
 }
 
-bool move_pacman(PhysicsBody *body)
+bool move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext)
 {
+	//default movement to not changing position
+	MovementResult result = SameSquare;
+
+	int xBefore = body->xOffset;
+	int yBefore = body->yOffset;
+
 	int xDir = 0;
 	int yDir = 0;
 
 	dir_xy(body->curDir, &xDir, &yDir);
 
-	body->xOffset += xDir * body->velocity;
-	body->yOffset += yDir * body->velocity;
+	//we have double pixels so multiply by 2
+	int BASE_VALUE = 75 * 2;
+	int MULT_VALUE = 60;
 
-	//TODO: see if I can make this more pretty
+	//our pixel value for the velocity 
+	//range between 1800 for v==40, to 4725 for v==105
+	int velPixValue = (body->velocity / 100.0f) * BASE_VALUE;
+	
+	int divide = velPixValue / MULT_VALUE;
+	int remain = velPixValue % MULT_VALUE;
 
-	if (body->xOffset < -8) 
+	//add any new speed to current pixel position (only useful for velocity >= 80)
+	body->xOffset += divide * xDir;
+	body->yOffset += divide * yDir;
+
+	//add any new carry to current carry (always useful except for velocity == 80)
+	body->xOffsetInternal += remain * xDir;
+	body->yOffsetInternal += remain * yDir;
+
+	//add any new pixels we've introduced with our carry
+	//this value will be non-zero if we have introduced enough carry
+	int offX = body->xOffsetInternal / MULT_VALUE;
+	int offY = body->yOffsetInternal / MULT_VALUE;
+
+	//add to our pixel offset any new carry pixels
+	body->xOffset += offX;
+	body->yOffset += offY;
+
+	//and subtract that carrys pixel from our offsetinternal
+	body->xOffsetInternal -= offX * MULT_VALUE;
+	body->yOffsetInternal -= offY * MULT_VALUE;
+
+	// we should now have resolved all the values we need to
+
+	int xNow = body->xOffset;
+	int yNow = body->yOffset;
+	//Now handle if we've moved over center, or into a new square
+
+	bool overCenter = false;
+	int overOffset = 0;
+
+	//move over center square
+	if ((xBefore < 0 && xNow >= 0) || (xBefore > 0 && xNow <= 0))
 	{
-		body->xOffset = 7;
-		body->x--;
+		overCenter = true;
 
-		return true;
-	} 
-	else if (body->xOffset > 7)
+		result = OverCenter;
+
+		//transitioned over
+		overOffset = abs(body->xOffset) * MULT_VALUE + abs(body->xOffsetInternal);
+	}
+	else if ((yBefore < 0 && yNow >= 0) || (yBefore > 0 && yNow <= 0))
 	{
-		body->xOffset = -8;
-		body->x++;
+		overCenter = true;
 
-		return true;
-	} 
-	else if (body->yOffset < -8) 
-	{
-		body->yOffset = 7;
-		body->y--;
+		result = OverCenter;
 
-		return true;
-	} 
-	else if (body->yOffset > 7)
-	{
-		body->yOffset = -8;
-		body->y++;
-
-		return true;
+		//transitioned over
+		overOffset = abs(body->xOffset) * MULT_VALUE + abs(body->xOffsetInternal);
 	}
 
-	return false;
+	if (overCenter)
+	{
+		Direction newDir;
+
+		if (canMoveNext)
+		{
+			newDir = body->nextDir;
+		}
+		else if (canMoveCur)
+		{
+			newDir = body->curDir;
+		}
+		else
+		{
+			//they are stuck, so set everything to 0 then return
+			body->xOffset = 0;
+			body->yOffset = 0;
+			
+			body->xOffsetInternal = 0;
+			body->yOffsetInternal = 0;
+
+			return result;
+		}
+
+		body->curDir = newDir;
+
+		dir_xy(newDir, &xDir, &yDir);
+
+		body->xOffset = overOffset / MULT_VALUE * xDir;
+		body->yOffset = overOffset / MULT_VALUE * yDir;
+
+		body->xOffsetInternal = (overOffset % MULT_VALUE) * xDir;
+		body->yOffsetInternal = (overOffset % MULT_VALUE) * yDir;
+
+		return result;
+	}
+
+	//check if we've gone onto a new square
+	//int low = -8;
+	//int high = 7;
+	int low = -8;
+	int high = 7;
+	int offset = 15;
+
+	if (body->xOffset < low) 
+	{
+		body->xOffset += offset;
+		body->x--;
+
+		result = NewSquare;
+	} 
+	else if (body->xOffset > high)
+	{
+		body->xOffset -= offset;
+		body->x++;
+
+		result = NewSquare;
+	} 
+	else if (body->yOffset < low) 
+	{
+		body->yOffset += offset;
+		body->y--;
+
+		result = NewSquare;
+	} 
+	else if (body->yOffset > high)
+	{
+		body->yOffset -= offset;
+		body->y++;
+
+		result = NewSquare;
+	}
+
+	return result;
 }
 
 // Note on center/ horo/ vert functions:

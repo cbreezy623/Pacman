@@ -7,7 +7,8 @@ static int numTicks;
 
 void fps_init(int hz)
 {
-	SDL_setFramerate(&fpsManager, hz);
+	SDL_initFramerate(&fpsManager);
+	fps_sethz(hz);
 }
 
 void fps_sethz(int hz)
