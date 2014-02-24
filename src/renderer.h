@@ -103,4 +103,3 @@ void draw_fruit_pts(GameFruit *gameFruit);
 
 void draw_board(Board *board);
 void draw_board_flash(Board *board);
-
