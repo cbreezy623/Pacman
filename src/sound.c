@@ -33,8 +33,8 @@ void load_sounds(void)
 
 	//for (int i = 0; i < NUM_EFFECTS; i++)
 	//{
-//		effects[i] = Mix_LoadWAV(EFFECT_FILES[i]);
-//	}
+		//effects[i] = Mix_LoadWAV(EFFECT_FILES[i]);
+	//}
 
 	levelStart = Mix_LoadWAV("sound/pacintro.wav");
 
@@ -44,10 +44,10 @@ void load_sounds(void)
 
 void dispose_sounds(void)
 {
-//	for (int i = 0; i < NUM_EFFECTS; i++)
-//	{
-//		Mix_FreeChunk(effects[i]);
-//	}
+	//for (int i = 0; i < NUM_EFFECTS; i++)
+	//{
+		//Mix_FreeChunk(effects[i]);
+	//}
 
 	Mix_FreeChunk(levelStart);
 
@@ -91,9 +91,9 @@ void play_sound(SoundEffect effectName)
 
 	switch (effectName)
 	{
-		case LevelStartSound: 	chunk = levelStart; channel = &levelStartChanel; break;
-		case WakawakaSound:		chunk = levelStart; channel = &levelStartChanel; break;
-		case PacmanDeathSound:	chunk = levelStart; channel = &levelStartChanel; break;
+		case LevelStartSound:  chunk = levelStart; channel = &levelStartChanel; break;
+		case WakawakaSound:    chunk = levelStart; channel = &levelStartChanel; break;
+		case PacmanDeathSound: chunk = levelStart; channel = &levelStartChanel; break;
 	}
 
 	*channel = Mix_PlayChannel(-1, chunk, 0);
@@ -110,9 +110,9 @@ void stop_sound(SoundEffect effectName)
 
 	switch (effectName)
 	{
-		case LevelStartSound: 	channel = levelStartChanel; break;
-		case WakawakaSound:		channel = levelStartChanel; break;
-		case PacmanDeathSound:	channel = levelStartChanel; break;
+		case LevelStartSound:  channel = levelStartChanel; break;
+		case WakawakaSound:    channel = levelStartChanel; break;
+		case PacmanDeathSound: channel = levelStartChanel; break;
 		default: printf("badsound\naborting\n"); exit(1); //TODO: fix this up
 	}
 

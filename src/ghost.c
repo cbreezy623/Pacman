@@ -27,15 +27,15 @@ void reset_ghost(Ghost *ghost, GhostType type)
 
 	switch (type)
 	{
-		case Blinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
-		//case Inky:		{ x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
-		//case Clyde:		{ x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
-		//case Pinky:		{ x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; next = Down; break; }
+		case Blinky: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		//case Inky: { x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
+		//case Clyde: { x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
+		//case Pinky: { x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; next = Down; break; }
 
 		//testing
-		case Inky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
-		case Clyde:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
-		case Pinky:	{ x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		case Inky:  { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		case Clyde: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		case Pinky: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
 
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
@@ -51,7 +51,6 @@ void reset_ghost(Ghost *ghost, GhostType type)
 	ghost->nextDirection = Left;
 }
 
-
 void send_to_home(Ghost *ghost, GhostType type)
 {
 	int targetX;
@@ -59,11 +58,13 @@ void send_to_home(Ghost *ghost, GhostType type)
 
 	switch (type)
 	{
-		case Blinky: 	{ targetX = 25; targetY =  -2; break; }
-		case Inky:		{ targetX = 27; targetY =  31; break; }
-		case Clyde:		{ targetX =  0; targetY =  31; break; }
-		case Pinky:		{ targetX =  2; targetY =  -2; break; }
-		default: printf("error ghost\naborting\n"); exit(1);
+		case Blinky: { targetX = 25; targetY =  -2; break; }
+		case Inky:   { targetX = 27; targetY =  31; break; }
+		case Clyde:  { targetX =  0; targetY =  31; break; }
+		case Pinky:  { targetX =  2; targetY =  -2; break; }
+		default:
+			printf("error ghost\naborting\n");
+			exit(1);
 	}
 
 	ghost->targetX = targetX;
@@ -91,9 +92,8 @@ Direction next_direction(Ghost *ghost, Board *board)
 	//we then select the one with the smallest distance
 	//if there is a tie, we break it in order Up, Left, Down, Right
 
-	Targetcalc targets[4] = {  {Up, INT_MAX}, {Left, INT_MAX}, {Down, INT_MAX}, {Right, INT_MAX} };
-
-	Boardoffset offsets[4] = { {0, -1},       {-1, 0},         {0, 1},          {1, 0} };
+	Targetcalc targets[4] =  { {Up, INT_MAX}, {Left, INT_MAX}, {Down, INT_MAX}, {Right, INT_MAX}};
+	Boardoffset offsets[4] = { {0, -1}, {-1, 0}, {0, 1}, {1, 0} };
 
 	int x, y;
 	dir_xy(ghost->nextDirection, &x, &y);
@@ -151,10 +151,10 @@ void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pa
 
 	switch (type)
 	{
-		case Blinky:	execute_red_logic(targetGhost, pacman); 			break;
-		case Inky:		execute_blue_logic(targetGhost, redGhost, pacman);	break;
-		case Clyde:		execute_orange_logic(targetGhost, pacman);			break;
-		case Pinky:		execute_pink_logic(targetGhost, pacman);			break;
+		case Blinky: execute_red_logic(targetGhost, pacman);            break;
+		case Inky:   execute_blue_logic(targetGhost, redGhost, pacman); break;
+		case Clyde:  execute_orange_logic(targetGhost, pacman);         break;
+		case Pinky:  execute_pink_logic(targetGhost, pacman);           break;
 	}
 }
 
@@ -239,7 +239,7 @@ int ghost_speed_fright(int level)
 	if (level == 1)  return 50;
 	if (level <= 4)  return 55;
 	if (level <= 20) return 60;
-	return 100;	//ghosts don't get into frightened mode past this
+	return 100; //ghosts don't get into frightened mode past this
 }
 int ghost_speed_tunnel(int level)
 {

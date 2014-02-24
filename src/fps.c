@@ -18,26 +18,26 @@ void fps_sethz(int hz)
 
 void fps_sleep(void)
 {
-    numTicks++;
-    SDL_framerateDelay(&fpsManager);
+	numTicks++;
+	SDL_framerateDelay(&fpsManager);
 }
 
 unsigned int ticks_game(void)
 {
-    return SDL_GetTicks();
+	return SDL_GetTicks();
 }
 
 unsigned int ticks_startup()
 {
-    return SDL_GetTicks();
+	return SDL_GetTicks();
 }
 
 unsigned int frames_game(void)
 {
-    return numTicks;
+	return numTicks;
 }
 
 unsigned int frames_startup(void)
 {
-    return numTicks;
+	return numTicks;
 }

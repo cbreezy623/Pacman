@@ -11,19 +11,19 @@ typedef struct
 	int y;
 	int xOffset;
 	int yOffset;
-	Direction curDir;		//current direction we are moving
-	Direction nextDir;		//direction to move once we reach the center of the next tile
+	Direction curDir;    //current direction we are moving
+	Direction nextDir;   //direction to move once we reach the center of the next tile
 	int velocity;
-	int xOffsetInternal;	//accurate offset used for internal calculation
-	int yOffsetInternal;	//accurate offset used for internal calculation
+	int xOffsetInternal; //accurate offset used for internal calculation
+	int yOffsetInternal; //accurate offset used for internal calculation
 } PhysicsBody;
 
 //Results of a movement.
 typedef enum
 {
-	NewSquare,		//Entity has moved into a new square
-	OverCenter,		//Entity has moved over the center of its current tile
-	SameSquare		//Entity has moved within square without moving over the center
+	NewSquare,  //Entity has moved into a new square
+	OverCenter, //Entity has moved over the center of its current tile
+	SameSquare  //Entity has moved within square without moving over the center
 } MovementResult;
 
 //Determines if the bodies collide based soley on their square on the board.

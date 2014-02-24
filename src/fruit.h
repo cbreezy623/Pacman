@@ -30,14 +30,14 @@ typedef enum
 //Defines a fruit for use in Pacman.
 typedef struct
 {
-	Fruit fruit;					// the fruit we are displaying
-	FruitMode fruitMode;			// the mode the fruit is currently in
-	unsigned int startedAt;			// the time we started displaying this fruit at (in SDL_Ticks())
-	unsigned int displayTime;		// the random time between 9000-10000 ms this fruit displays for
-	int x;							// x location onscreen
-	int y;							// y location onscreen
-	bool eaten;						// if the fruit was eaten while it displayed
-	unsigned int eatenAt;			// the time it was eaten (used for displaying the points gained)
+	Fruit fruit;              // the fruit we are displaying
+	FruitMode fruitMode;      // the mode the fruit is currently in
+	unsigned int startedAt;   // the time we started displaying this fruit at (in SDL_Ticks())
+	unsigned int displayTime; // the random time between 9000-10000 ms this fruit displays for
+	int x;                    // x location onscreen
+	int y;                    // y location onscreen
+	bool eaten;               // if the fruit was eaten while it displayed
+	unsigned int eatenAt;     // the time it was eaten (used for displaying the points gained)
 } GameFruit;
 
 //Returns the number of points the given fruit is worth.

@@ -18,7 +18,6 @@ typedef struct
 	TextColor color;
 } GhostDisplayRow;
 
-
 //Class handles the drawing of all entities in the game
 
 //
@@ -95,7 +94,6 @@ void draw_ghost(Ghost *ghost);
 //
 
 void draw_fruit_pts(GameFruit *gameFruit);
-
 
 //
 // Board rendering

@@ -6,20 +6,20 @@
 
 typedef enum
 {
-	Blinky,		// red ghost
-	Inky,		// cyan
-	Pinky,		// pink
-	Clyde		// orange
+	Blinky, // red ghost
+	Inky,   // cyan
+	Pinky,  // pink
+	Clyde   // orange
 } GhostType;
 
 typedef enum
 {
-	InPen,				//in this at the start, as they bob up and down inside the pen
-	LeavingPen,			//in this as they leave the pen, before being out in the maze proper
-	Chase,				//ghosts use their normal AI strategy, usually trying to get pacman
-	Scatter,			//ghosts go back to their pens during this mode
-	Frightened, 		//after eating pellets ghosts are in this mode. All blue and can be eaten
-	Eaten 				//in this mode after being eaten by pacman, takes them back to the pen
+	InPen,      //in this at the start, as they bob up and down inside the pen
+	LeavingPen, //in this as they leave the pen, before being out in the maze proper
+	Chase,      //ghosts use their normal AI strategy, usually trying to get pacman
+	Scatter,    //ghosts go back to their pens during this mode
+	Frightened, //after eating pellets ghosts are in this mode. All blue and can be eaten
+	Eaten       //in this mode after being eaten by pacman, takes them back to the pen
 } MovementMode;
 
 typedef struct
@@ -27,8 +27,8 @@ typedef struct
 	PhysicsBody body;
 	int targetX;
 	int targetY;
-	Direction transDirection;		//direction ghost should face for middle of current tile to middle of next tile
-	Direction nextDirection;		//direction ghost should face when reaching the center of the next tilea
+	Direction transDirection; //direction ghost should face for middle of current tile to middle of next tile
+	Direction nextDirection;  //direction ghost should face when reaching the center of the next tilea
 	GhostType ghostType;
 	MovementMode movementMode;
 } Ghost;

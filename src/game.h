@@ -20,7 +20,6 @@ typedef enum
 
 //what causes you to transition from state A -> state B
 
-
 //elevator stationary
 	//action: do nothing
 	//transition

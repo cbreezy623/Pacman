@@ -11,14 +11,14 @@ int fruit_points(Fruit fruit)
 {
 	switch (fruit)
 	{
-		case Cherry:		return 100;
-		case Strawberry:	return 300;
-		case Peach:			return 500;
-		case Apple:			return 700;
-		case Grapes:		return 1000;
-		case Galaxian:		return 2000;
-		case Bell:			return 3000;
-		case Key:			return 5000;
+		case Cherry:     return 100;
+		case Strawberry: return 300;
+		case Peach:      return 500;
+		case Apple:      return 700;
+		case Grapes:     return 1000;
+		case Galaxian:   return 2000;
+		case Bell:       return 3000;
+		case Key:        return 5000;
 	}
 
 	printf("invalid fruit\naborting\n");
@@ -36,14 +36,14 @@ Fruit fruit_for_level(int level)
 
 	switch (level)
 	{
-		case 1:       		return Cherry;
-		case 2:       		return Strawberry;
-		case 3:  case 4:   	return Peach;
-		case 5:  case 6:   	return Apple;
-		case 7:  case 8:   	return Grapes;
-		case 9:  case 10:  	return Galaxian;
-		case 11: case 12:  	return Bell;
-		default: 			return Key;
+		case 1:           return Cherry;
+		case 2:           return Strawberry;
+		case 3:  case 4:  return Peach;
+		case 5:  case 6:  return Apple;
+		case 7:  case 8:  return Grapes;
+		case 9:  case 10: return Galaxian;
+		case 11: case 12: return Bell;
+		default:          return Key;
 	}
 }
 

@@ -18,7 +18,6 @@ void draw_image_coord_offset(SDL_Surface *surface, int x, int y, int xOffset, in
 #define Y_OFFSET 3
 static int offset = 3 * 16;
 
-
 void draw_image_coord(SDL_Surface *surface, int x, int y)
 {
 	draw_image_coord_offset(surface, x, y, 0, 0);
@@ -29,7 +28,6 @@ void draw_image_coord_offset(SDL_Surface *surface, int x, int y, int xOffset, in
 	int pixPerTile = 16;
 	apply_surface(pixPerTile * x + xOffset, pixPerTile * y + yOffset, surface);
 }
-
 
 //
 //
@@ -58,7 +56,6 @@ void draw_vanity_charnickname(void)
 	set_text_color(WhiteText);
 	draw_text_coord(get_screen(), "CHARACTER / NICKNAME", 7, 5);
 }
-
 
 void draw_vanity_corporate_info(void)
 {
@@ -174,7 +171,7 @@ void draw_credits(int numCredits)
 	}
 
 	char scoreStr[256];
-    sprintf(scoreStr, "   %i", numCredits);
+	sprintf(scoreStr, "   %i", numCredits);
 
 	//draw credit + number of credits at the appropriate place
 	set_text_color(WhiteText);

@@ -164,13 +164,13 @@ static SDL_Surface *get_surface(char c)
 	//if special, get the special image
 	switch (c)
 	{
-        case ' ': return spec_fonts[textColor][0];
-        case '.': return spec_fonts[textColor][1];
-        case '-': return spec_fonts[textColor][2];
-        case '@': return spec_fonts[textColor][3];
-        case '!': return spec_fonts[textColor][4];
-        case '/': return spec_fonts[textColor][5];
-        case '"': return spec_fonts[textColor][6];
+		case ' ': return spec_fonts[textColor][0];
+		case '.': return spec_fonts[textColor][1];
+		case '-': return spec_fonts[textColor][2];
+		case '@': return spec_fonts[textColor][3];
+		case '!': return spec_fonts[textColor][4];
+		case '/': return spec_fonts[textColor][5];
+		case '"': return spec_fonts[textColor][6];
 	}
 
 	printf("error getting text surface with char %c\n", c);
@@ -182,13 +182,13 @@ static SDL_Color get_color(TextColor color)
 {
 	switch (color)
 	{
-		case WhiteText: 	return (SDL_Color) { 223, 223, 255, 255 };
-		case YellowText:	return (SDL_Color) { 255, 255,   0, 255 };
-		case PeachText:		return (SDL_Color) { 255, 185, 175, 255 };
-		case RedText: 		return (SDL_Color) { 255,   0,   0, 255 };
-		case PinkText: 		return (SDL_Color) { 255, 185, 255, 255 };
-		case CyanText: 		return (SDL_Color) {   0, 255, 255, 255 };
-		case OrangeText: 	return (SDL_Color) { 255, 185,  81, 255 };
+		case WhiteText:  return (SDL_Color) { 223, 223, 255, 255 };
+		case YellowText: return (SDL_Color) { 255, 255,   0, 255 };
+		case PeachText:  return (SDL_Color) { 255, 185, 175, 255 };
+		case RedText:    return (SDL_Color) { 255,   0,   0, 255 };
+		case PinkText:   return (SDL_Color) { 255, 185, 255, 255 };
+		case CyanText:   return (SDL_Color) {   0, 255, 255, 255 };
+		case OrangeText: return (SDL_Color) { 255, 185,  81, 255 };
 	}
 
 	printf("error color: %d\naborting\n", color);

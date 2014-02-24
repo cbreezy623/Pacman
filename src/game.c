@@ -18,9 +18,9 @@ static void process_fruit(PacmanGame *game);
 static void process_ghosts(PacmanGame *game);
 static void process_pellets(PacmanGame *game);
 
-static bool check_pacghost_collision(PacmanGame *game);			//return true if pacman collided with any ghosts
-static void enter_state(PacmanGame *game, GameState state);		//transitions to/ from a state
-static bool resolve_telesquare(PhysicsBody *body);				//wraps the body around if they've gone tele square
+static bool check_pacghost_collision(PacmanGame *game);     //return true if pacman collided with any ghosts
+static void enter_state(PacmanGame *game, GameState state); //transitions to/ from a state
+static bool resolve_telesquare(PhysicsBody *body);          //wraps the body around if they've gone tele square
 
 void game_tick(PacmanGame *game)
 {
@@ -43,7 +43,6 @@ void game_tick(PacmanGame *game)
 
 			process_fruit(game);
 			process_pellets(game);
-
 
 			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
 
@@ -68,7 +67,6 @@ void game_tick(PacmanGame *game)
 			//ghosts disappear
 			//death animation starts
 			//empty screen for half a second
-
 
 			break;
 		case GameoverState:
@@ -167,7 +165,6 @@ void game_render(PacmanGame *game)
 		case GamePlayState:
 			draw_large_pellets(&game->pelletHolder, true);
 			draw_board(&game->board);
-
 
 			if (game->gameFruit1.fruitMode == Displaying) draw_fruit_game(game->currentLevel);
 			if (game->gameFruit2.fruitMode == Displaying) draw_fruit_game(game->currentLevel);
@@ -549,7 +546,7 @@ void gamestart_init(PacmanGame *game)
 	pacman_init(&game->pacman);
 	//we need to reset all fruit
 	//fuit_init();
-	game->highscore = 0;	//TODO maybe load this in from a file..?
+	game->highscore = 0; //TODO maybe load this in from a file..?
 	game->currentLevel = 1;
 
 	//invalidate the state so it doesn't effect the enter_state function
@@ -586,13 +583,13 @@ int int_length(int x)
 {
     if (x >= 1000000000) return 10;
     if (x >= 100000000)  return 9;
-    if (x >= 10000000) 	 return 8;
-    if (x >= 1000000) 	 return 7;
-    if (x >= 100000) 	 return 6;
-    if (x >= 10000) 	 return 5;
-    if (x >= 1000) 		 return 4;
-    if (x >= 100) 		 return 3;
-    if (x >= 10) 		 return 2;
+    if (x >= 10000000)   return 8;
+    if (x >= 1000000)    return 7;
+    if (x >= 100000)     return 6;
+    if (x >= 10000)      return 5;
+    if (x >= 1000)       return 4;
+    if (x >= 100)        return 3;
+    if (x >= 10)         return 2;
     return 1;
 }
 
