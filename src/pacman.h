@@ -12,7 +12,7 @@
 
 //typedef for pacman when he is moving
 //if he moved against a wall and the player doesn't move, he is considered "stuck"
-//this is needed for animation purposes 
+//this is needed for animation purposes
 typedef enum
 {
 	Stuck,
@@ -20,7 +20,7 @@ typedef enum
 } MovementType;
 
 //Defines Pacman. Includes all his information such as location, lives, score, etc.
-typedef struct 
+typedef struct
 {
 	PhysicsBody body;
 	int missedFrames;

@@ -1,7 +1,7 @@
 #pragma once
 
 //Defines the four cardinal directions.
-typedef enum 
+typedef enum
 {
 	Up,
 	Down,
@@ -10,11 +10,11 @@ typedef enum
 } Direction;
 
 //Defines the four ordinal directions.
-typedef enum 
+typedef enum
 {
-	TopLeft, 
-	TopRight, 
-	BottomLeft, 
+	TopLeft,
+	TopRight,
+	BottomLeft,
 	BottomRight
 } DiagDirection;
 

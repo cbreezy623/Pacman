@@ -46,7 +46,7 @@ void draw_vanity_ghostline(GhostDisplayRow *row, int y, bool drawDescription, bo
 		set_text_color(row->color);
 		draw_text_coord(get_screen(), row->description, 7, y);
 	}
-	
+
 	if (drawName)
 	{
 		draw_text_coord(get_screen(), row->name, 18, y);
@@ -144,9 +144,9 @@ void draw_common_twoup(bool flashing, int score)
 	set_text_color(WhiteText);
 	draw_numtext_coord(get_screen(), "2", 22, 0);
 	draw_text_coord(get_screen(), "UP", 23, 0);
-	
+
 	if (flashing && animation_get_frame(265, 2)) return;
-	
+
 	char scoreStr[256];
 	sprintf(scoreStr, "%01i", score);
 	draw_text_coord(get_screen(), scoreStr, 6 - int_length(score), 1);
@@ -156,10 +156,10 @@ void draw_common_highscore(int highscore)
 {
 	set_text_color(WhiteText);
 	draw_text_coord(get_screen(), "HIGH SCORE", 9, 0);
-	
+
 	//game doesn't render highscore if it is 0 for some reason. Emulate this behaviour
 	if (highscore == 0) return;
-	
+
 	char scoreStr[256];
 	sprintf(scoreStr, "%01i", highscore);
 	draw_text_coord(get_screen(), scoreStr, 16 - int_length(highscore), 1);
@@ -225,7 +225,7 @@ void draw_fruit_indicators(int currentLevel)
 	}
 
 	int x = 26 * 16;
-	int y = 34 * 16;	
+	int y = 34 * 16;
 
 	int index = currentLevel > 7 ? 7 : currentLevel;
 
@@ -330,7 +330,7 @@ void draw_pacman(Pacman *pacman)
 		frame = animation_get_frame(50, 4);
 	}
 
-	int xOffset = pacman->body.xOffset - 4; 
+	int xOffset = pacman->body.xOffset - 4;
 	int yOffset = offset + pacman->body.yOffset - 4;
 
 	draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
@@ -389,7 +389,7 @@ void draw_pacman_lives(int numLives)
 {
 	int x = 2 * 16;
 	int y = 34 * 16;
-	
+
 	for (int i = 0; i < numLives; i++)
 	{
 		apply_surface(x, y, pacman_life_image());

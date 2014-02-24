@@ -7,7 +7,7 @@
 #define BOARD_LENGTH 28
 #define BOARD_HEIGHT 31
 
-typedef enum 
+typedef enum
 {
 	DoubleCorner,
 	SingleCorner,
@@ -19,14 +19,14 @@ typedef enum
 	PenSide
 } SquareType;
 
-typedef struct 
+typedef struct
 {
 	int x, y;
 	bool walkable;
 	SDL_Surface *image;
 } BoardSquare;
 
-typedef struct 
+typedef struct
 {
 	BoardSquare boardSquares[BOARD_LENGTH][BOARD_HEIGHT];
 } Board;

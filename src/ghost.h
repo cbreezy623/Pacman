@@ -4,7 +4,7 @@
 #include "direction.h"
 #include "pacman.h"
 
-typedef enum 
+typedef enum
 {
 	Blinky,		// red ghost
 	Inky,		// cyan
@@ -22,7 +22,7 @@ typedef enum
 	Eaten 				//in this mode after being eaten by pacman, takes them back to the pen
 } MovementMode;
 
-typedef struct 
+typedef struct
 {
 	PhysicsBody body;
 	int targetX;

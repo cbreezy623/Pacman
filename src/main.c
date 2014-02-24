@@ -82,17 +82,17 @@ static void internal_tick(void)
     {
         case Menu:
             menu_tick(&menuSystem);
-            
+
             if (menuSystem.action == GoToGame)
             {
                 state = Game;
                 startgame_init();
             }
-            
+
             break;
         case Game:
             game_tick(&pacmanGame);
-            
+
             if (is_game_over(&pacmanGame))
             {
                 menu_init(&menuSystem);
@@ -109,7 +109,7 @@ static void internal_tick(void)
 static void internal_render(void)
 {
     clear_screen(0, 0, 0, 0);
-    
+
     switch (state)
     {
         case Menu:
@@ -203,7 +203,7 @@ static void key_down_hacks(int keycode)
     if (keycode == SDLK_SPACE) fps_sethz((rateSwitch = !rateSwitch) ? 200 : 60);
 
     //TODO: move logic into the tick method of the menu
-    if (state == Menu && keycode == SDLK_5 && numCredits < 99) 
+    if (state == Menu && keycode == SDLK_5 && numCredits < 99)
     {
         numCredits++;
     }
@@ -214,14 +214,14 @@ static void key_down_hacks(int keycode)
         for (int i = 0; i < 4; i++) pacmanGame.ghosts[i].body.velocity += 5;
 
         printf("ghost speed: %d\n", pacmanGame.ghosts[0].body.velocity);
-    } 
+    }
     else if (keycode == SDLK_0)
     {
         printf("minus\n");
         for (int i = 0; i < 4; i++) pacmanGame.ghosts[i].body.velocity -= 5;
 
         printf("ghost speed: %d\n", pacmanGame.ghosts[0].body.velocity);
-    } 
+    }
 }
 
 int num_credits(void)

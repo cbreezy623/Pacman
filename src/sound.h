@@ -6,10 +6,10 @@
 #define NUM_EFFECTS 3
 
 //The different sound effects we can use.
-typedef enum 
+typedef enum
 {
 	LevelStartSound,
-	WakawakaSound, 
+	WakawakaSound,
 	PacmanDeathSound
 } SoundEffect;
 

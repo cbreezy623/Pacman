@@ -14,7 +14,7 @@ typedef enum
 } PelletType;
 
 //Defines a single pellet. Includes pellet-type, pellet location, etc.
-typedef struct 
+typedef struct
 {
 	int x, y;
 	bool eaten;
@@ -23,7 +23,7 @@ typedef struct
 } Pellet;
 
 //Holds all the pellets in the game. Records how many are eaten and are left.
-typedef struct 
+typedef struct
 {
 	int numLeft;
 	int totalNum;

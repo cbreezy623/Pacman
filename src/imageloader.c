@@ -51,7 +51,7 @@ SDL_Surface *hallway_imgs[4];
 //
 //pen sprites
 //
-                                                    
+
 SDL_Surface *pen_imgs[4];
 SDL_Surface *penSide_imgs[4];
 SDL_Surface *penGate;
@@ -180,7 +180,7 @@ void load_board_images(void)
 
 void dispose_board_images(void)
 {
-    for (int i = 0; i < 4; i++) 
+    for (int i = 0; i < 4; i++)
     {
         SDL_FreeSurface(double_corner_imgs[i]);
         SDL_FreeSurface(single_corner_imgs[i]);
@@ -269,16 +269,16 @@ const char *get_ghost_dir(GhostType type)
 }
 
 void load_ghost_images(void)
-{    
+{
     char dirStr[256];
-    
+
     for (int col = 0; col < 4; col++)
     {
         for (int i = 0; i < 2; i++)
         {
             sprintf(dirStr, "%s%s%d%s", get_ghost_dir(col), "u", i, ".png");
             ghosts[col][0][i] = load_image(dirStr);
-            
+
             sprintf(dirStr, "%s%s%d%s", get_ghost_dir(col), "d", i, ".png");
             ghosts[col][1][i] = load_image(dirStr);
 
@@ -292,7 +292,7 @@ void load_ghost_images(void)
 
     ghostScared[0] = load_image(DIR ENTITIES_DIR GHOST_DIR SCARED_DIR "scared0.png");
     ghostScared[1] = load_image(DIR ENTITIES_DIR GHOST_DIR SCARED_DIR "scared1.png");
-    
+
     ghostEyes[0] = load_image(DIR ENTITIES_DIR GHOST_DIR EYES_DIR "u.png");
     ghostEyes[1] = load_image(DIR ENTITIES_DIR GHOST_DIR EYES_DIR "d.png");
     ghostEyes[2] = load_image(DIR ENTITIES_DIR GHOST_DIR EYES_DIR "l.png");
@@ -312,7 +312,7 @@ void dispose_ghost_images(void)
 
     SDL_FreeSurface(ghostScared[0]);
     SDL_FreeSurface(ghostScared[1]);
-    
+
     SDL_FreeSurface(ghostEyes[0]);
     SDL_FreeSurface(ghostEyes[1]);
     SDL_FreeSurface(ghostEyes[2]);
@@ -326,7 +326,7 @@ void load_fruit_images(void)
     peachImage      = load_image(DIR FRUIT_DIR "peach.png");
     appleImage      = load_image(DIR FRUIT_DIR "apple.png");
     grapesImage     = load_image(DIR FRUIT_DIR "grapes.png");
-    galaxianImage   = load_image(DIR FRUIT_DIR "galaxian.png"); 
+    galaxianImage   = load_image(DIR FRUIT_DIR "galaxian.png");
     bellImage       = load_image(DIR FRUIT_DIR "bell.png");
     keyImage        = load_image(DIR FRUIT_DIR "key.png");
 }
@@ -347,7 +347,7 @@ void load_misc_images(void)
 {
     smallPellet = load_image(DIR "smallpellet.png");
     largePellet = load_image(DIR "largepellet.png");
-    
+
     ptsWhiteImage = load_image(DIR "ptswhite.png");
     ptsPeachImage = load_image(DIR "ptspeach.png");
 
@@ -402,7 +402,7 @@ void load_char_images(void)
 
     for (int i = 0; i < 10; i++)
     {
-        
+
         char c = '0';
         sprintf(dirStr, "%s%c%s", DIR CHAR_DIR NUMS_DIR, (char) (c +i), ".png");
 
@@ -536,7 +536,7 @@ SDL_Surface* hallway_image(Direction direction)
 
 SDL_Surface* tleft_image(DiagDirection direction)
 {
-    return tleft_imgs[direction]; 
+    return tleft_imgs[direction];
 }
 
 SDL_Surface* tright_image(DiagDirection direction)

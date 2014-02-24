@@ -89,20 +89,20 @@ void game_tick(PacmanGame *game)
 	{
 		case GameBeginState:
 			if (dt > 2200) enter_state(game, LevelBeginState);
-			
+
 			break;
 		case LevelBeginState:
 			if (dt > 1800) enter_state(game, GamePlayState);
 
 			break;
 		case GamePlayState:
-			
+
 			//TODO: remove this hacks
 			if (key_held(SDLK_k)) enter_state(game, DeathState);
 
 			else if (allPelletsEaten) enter_state(game, WinState);
-			else if (collidedWithGhost) enter_state(game, DeathState); 
-			
+			else if (collidedWithGhost) enter_state(game, DeathState);
+
 			break;
 		case WinState:
 			//if (transitionLevel) //do transition here
@@ -118,11 +118,11 @@ void game_tick(PacmanGame *game)
 
 			break;
 		case GameoverState:
-			if (dt > 2000) 
+			if (dt > 2000)
 			{
 				//TODO: go back to main menu
 
-			} 
+			}
 			break;
 	}
 }
@@ -135,9 +135,9 @@ void game_render(PacmanGame *game)
 	// 1up + score, highscore, base board, lives, small pellets, fruit indicators
 	draw_common_oneup(true, game->pacman.score);
 	draw_common_highscore(game->highscore);
-	
+
 	draw_pacman_lives(game->pacman.livesLeft);
-	
+
 	draw_small_pellets(&game->pelletHolder);
 	draw_fruit_indicators(game->currentLevel);
 
@@ -174,7 +174,7 @@ void game_render(PacmanGame *game)
 
 			if (game->gameFruit1.eaten && ticks_game() - game->gameFruit1.eatenAt < 2000) draw_fruit_pts(&game->gameFruit1);
 			if (game->gameFruit2.eaten && ticks_game() - game->gameFruit2.eatenAt < 2000) draw_fruit_pts(&game->gameFruit2);
-			
+
 			draw_pacman(&game->pacman);
 
 			for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
@@ -223,7 +223,7 @@ void game_render(PacmanGame *game)
 }
 
 static void enter_state(PacmanGame *game, GameState state)
-{	
+{
 	//process leaving a state
 	switch (game->gameState)
 	{
@@ -239,7 +239,7 @@ static void enter_state(PacmanGame *game, GameState state)
 		case DeathState:
 			// Player died and is starting a new game, subtract a life
 			if (state == LevelBeginState)
-			{	
+			{
 				game->pacman.livesLeft--;
 			}
 		default: ; //do nothing
@@ -250,7 +250,7 @@ static void enter_state(PacmanGame *game, GameState state)
 	{
 		case GameBeginState:
 			play_sound(LevelStartSound);
-			
+
 			break;
 		case LevelBeginState:
 			level_init(game);
@@ -339,7 +339,7 @@ static void process_player(PacmanGame *game)
 		//don't do anything
 		return;
 	}
-	else 
+	else
 	{
 		//user doesn't want to change direction and pacman isn't stuck
 		//pacman can move like normal
@@ -419,7 +419,7 @@ static void process_ghosts(PacmanGame *game)
 			continue;
 		}
 
-		//all other modes can move normally (I think)		
+		//all other modes can move normally (I think)
 		MovementResult result = move_ghost(&g->body);
 		resolve_telesquare(&g->body);
 
@@ -512,7 +512,7 @@ static void process_pellets(PacmanGame *game)
 		if (collides_obj(&game->pacman.body, p->x, p->y))
 		{
 			holder->numLeft--;
-			
+
 			p->eaten = true;
 			game->pacman.score += pellet_points(p);
 
@@ -601,7 +601,7 @@ static bool resolve_telesquare(PhysicsBody *body)
 	//TODO: chuck this back in the board class somehow
 
 	if (body->y != 14) return false;
-	
+
 	if (body->x == -1) { body->x = 27; return true; }
 	if (body->x == 28) { body->x =  0; return true; }
 

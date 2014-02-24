@@ -65,18 +65,18 @@ void send_to_home(Ghost *ghost, GhostType type)
 		case Pinky:		{ targetX =  2; targetY =  -2; break; }
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
-	
+
 	ghost->targetX = targetX;
 	ghost->targetY = targetY;
 }
 
-typedef struct 
+typedef struct
 {
 	Direction dir;
 	int distance;
 } Targetcalc;
 
-typedef struct 
+typedef struct
 {
 	int x;
 	int y;
@@ -116,7 +116,7 @@ Direction next_direction(Ghost *ghost, Board *board)
 
 		int dx = testX - ghost->targetX;
 		int dy = testY - ghost->targetY;
-		
+
 		//really the square root, but don't take to keep precision
 		targets[i].distance = (dx * dx + dy * dy);
 	}
@@ -170,13 +170,13 @@ void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman)
 	// Pinks's AI is to set his target position to pacmans, plus a few more in the distance
 	int targetOffsetX = 0;
 	int targetOffsetY = 0;
-	
+
 	//use dir_xy_buggy to get 4 up AND 4 left, as per bug in original game
 	dir_xy_buggy(pacman->body.curDir, &targetOffsetX, &targetOffsetY);
 
 	targetOffsetX *= 4;
 	targetOffsetY *= 4;
-	
+
 	pinkGhost->targetX = pacman->body.x + targetOffsetX;
 	pinkGhost->targetY = pacman->body.y + targetOffsetY;
 }
@@ -186,10 +186,10 @@ void execute_orange_logic(Ghost *orangeGhost, Pacman *pacman)
 	// Orange's logic is in two parts:
 	// If Pacmans distance is 8 or more squares away, his target is pacman
 	// If Pacman is less than 8 squares, his target is his home
-	
+
 	int dx = orangeGhost->body.x - pacman->body.x;
 	int dy = orangeGhost->body.y - pacman->body.y;
-	
+
 	//really the square root, but can compare with square of other number
 	int distance = dx * dx + dy * dy;
 
@@ -207,22 +207,22 @@ void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman)
 {
 	int offsetX = 0;
 	int offsetY = 0;
-	
+
 	//use dir_xy_buggy to get 2 up AND 2 left, as per bug in original game
 	dir_xy_buggy(pacman->body.curDir, &offsetX, &offsetY);
 
 	offsetX *= 2;
 	offsetY *= 2;
-	
+
 	int tx = pacman->body.x + offsetX;
 	int ty = pacman->body.y + offsetY;
-	
+
 	int rx = redGhost->body.x;
 	int ry = redGhost->body.y;
-	
+
 	int targetX = 2 * tx - rx;
 	int targetY = 2 * ty - ry;
-	
+
 	blueGhost->targetX = targetX;
 	blueGhost->targetY = targetY;
 }

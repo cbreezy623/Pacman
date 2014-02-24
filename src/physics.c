@@ -34,10 +34,10 @@ MovementResult move_ghost(PhysicsBody *body)
 	int BASE_VALUE = 75 * 2;
 	int MULT_VALUE = 60;
 
-	//our pixel value for the velocity 
+	//our pixel value for the velocity
 	//range between 1800 for v==40, to 4725 for v==105
 	int velPixValue = (body->velocity / 100.0f) * BASE_VALUE;
-	
+
 	int divide = velPixValue / MULT_VALUE;
 	int remain = velPixValue % MULT_VALUE;
 
@@ -80,7 +80,7 @@ MovementResult move_ghost(PhysicsBody *body)
 
 		//transitioned over
 		overOffset = abs(body->xOffset) * MULT_VALUE + abs(body->xOffsetInternal);
-		
+
 		body->curDir = body->nextDir;
 	}
 	else if ((yBefore < 0 && yNow >= 0) || (yBefore > 0 && yNow <= 0))
@@ -91,7 +91,7 @@ MovementResult move_ghost(PhysicsBody *body)
 
 		//transitioned over
 		overOffset = abs(body->xOffset) * MULT_VALUE + abs(body->xOffsetInternal);
-		
+
 		body->curDir = body->nextDir;
 	}
 
@@ -115,27 +115,27 @@ MovementResult move_ghost(PhysicsBody *body)
 	int high = 7;
 	int offset = 15;
 
-	if (body->xOffset < low) 
+	if (body->xOffset < low)
 	{
 		body->xOffset += offset;
 		body->x--;
 
 		result = NewSquare;
-	} 
+	}
 	else if (body->xOffset > high)
 	{
 		body->xOffset -= offset;
 		body->x++;
 
 		result = NewSquare;
-	} 
-	else if (body->yOffset < low) 
+	}
+	else if (body->yOffset < low)
 	{
 		body->yOffset += offset;
 		body->y--;
 
 		result = NewSquare;
-	} 
+	}
 	else if (body->yOffset > high)
 	{
 		body->yOffset -= offset;
@@ -164,10 +164,10 @@ bool move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext)
 	int BASE_VALUE = 75 * 2;
 	int MULT_VALUE = 60;
 
-	//our pixel value for the velocity 
+	//our pixel value for the velocity
 	//range between 1800 for v==40, to 4725 for v==105
 	int velPixValue = (body->velocity / 100.0f) * BASE_VALUE;
-	
+
 	int divide = velPixValue / MULT_VALUE;
 	int remain = velPixValue % MULT_VALUE;
 
@@ -238,7 +238,7 @@ bool move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext)
 			//they are stuck, so set everything to 0 then return
 			body->xOffset = 0;
 			body->yOffset = 0;
-			
+
 			body->xOffsetInternal = 0;
 			body->yOffsetInternal = 0;
 
@@ -265,27 +265,27 @@ bool move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext)
 	int high = 7;
 	int offset = 15;
 
-	if (body->xOffset < low) 
+	if (body->xOffset < low)
 	{
 		body->xOffset += offset;
 		body->x--;
 
 		result = NewSquare;
-	} 
+	}
 	else if (body->xOffset > high)
 	{
 		body->xOffset -= offset;
 		body->x++;
 
 		result = NewSquare;
-	} 
-	else if (body->yOffset < low) 
+	}
+	else if (body->yOffset < low)
 	{
 		body->yOffset += offset;
 		body->y--;
 
 		result = NewSquare;
-	} 
+	}
 	else if (body->yOffset > high)
 	{
 		body->yOffset -= offset;

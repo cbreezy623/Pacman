@@ -34,7 +34,7 @@ SDL_Surface *get_screen(void)
 void clear_screen(int r, int g, int b, int a)
 {
     Uint32 col = SDL_MapRGBA(screen->format, r, g, b, a);
-    
+
     SDL_FillRect(screen, NULL, col);
 }
 

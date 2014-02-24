@@ -75,7 +75,7 @@ bool is_valid_string(const char *text)
 
 	while ((c = *text++))
 	{
-		if (!is_valid(c)) 
+		if (!is_valid(c))
 		{
 			printf("invalid char: '%c' in string \"%s\"\n", c, str);
 			return false;
@@ -120,7 +120,7 @@ void draw_text(SDL_Surface *surface, const char *text, int x, int y)
 		printf("aborting\n");
 		exit(1);
 	}
-	
+
 	SDL_Rect location;
 	location.x = x;
 	location.y = y;

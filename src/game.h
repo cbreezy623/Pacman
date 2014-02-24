@@ -29,7 +29,7 @@ typedef enum
 		//-> door opening (someone presses button on current level)
 		//-> go down/ up (timeout on a specific level)
 
-typedef struct 
+typedef struct
 {
 	GameState gameState;
 	unsigned int ticksSinceModeChange;
