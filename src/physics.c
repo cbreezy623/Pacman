@@ -30,7 +30,8 @@ MovementResult move_ghost(PhysicsBody *body)
 
 	dir_xy(body->curDir, &xDir, &yDir);
 
-	int BASE_VALUE = 75;
+	//we have double pixels so multiply by 2
+	int BASE_VALUE = 75 * 2;
 	int MULT_VALUE = 60;
 
 	//our pixel value for the velocity 
@@ -142,127 +143,6 @@ MovementResult move_ghost(PhysicsBody *body)
 
 		result = NewSquare;
 	}
-
-	return result;
-}
-
-MovementResult move_ghost_old(PhysicsBody *body)
-{
-	MovementResult result = SameSquare;
-
-	int xDir = 0;
-	int yDir = 0;
-
-	dir_xy(body->curDir, &xDir, &yDir);
-
-	//int change = body->velocity * 4500 / 10
-
-	//detect if they go over the middle tile
-
-	// +ve -> -ve, -ve -> +ve
-	if (xDir)
-	{
-		int xBefore = body->xOffsetInternal;
-
-		body->xOffsetInternal += xDir * body->velocity * 45;;
-
-		int over = 0;
-		if (xBefore < 0 && body->xOffsetInternal >= 0)
-		{
-			result = OverCenter;
-
-			//transitioned over
-			over = body->xOffsetInternal * xDir;
-			body->xOffsetInternal = 0;
-			body->curDir = body->nextDir;
-		}
-		else if (xBefore > 0 && body->xOffsetInternal <= 0)
-		{
-			result = OverCenter;
-
-			over = body->xOffsetInternal * xDir;
-			body->xOffsetInternal = 0;
-			body->curDir = body->nextDir;
-		}
-
-		dir_xy(body->nextDir, &xDir, &yDir);
-
-		body->yOffsetInternal += yDir * over;
-		body->xOffsetInternal += xDir * over;
-	}
-	else
-	{
-		int yBefore = body->yOffsetInternal;
-
-		body->yOffsetInternal += yDir * body->velocity * 45;
-
-		int over = 0;
-		if (yBefore < 0 && body->yOffsetInternal >= 0)
-		{
-			result = OverCenter;
-
-			//transitioned over
-			over = body->yOffsetInternal * yDir;
-			body->yOffsetInternal = 0;
-			body->curDir = body->nextDir;
-		}
-		else if (yBefore > 0 && body->yOffsetInternal <= 0)
-		{
-			result = OverCenter;
-
-			over = body->yOffsetInternal * yDir;
-			body->yOffsetInternal = 0;
-			body->curDir = body->nextDir;
-		}
-
-		dir_xy(body->nextDir, &xDir, &yDir);
-
-		body->yOffsetInternal += yDir * over;
-		body->xOffsetInternal += xDir * over;
-	}
-
-	
-	//body->yOffset += yDir * body->velocity;
-
-	//TODO: see if I can make this more pretty
-
-	//int low = -8;
-	//int high = 7;
-	int low = -36000;
-	int high = 31500;
-	int offset = 15 * 75 * 70;
-
-	if (body->xOffsetInternal < low) 
-	{
-		body->xOffsetInternal += offset;
-		body->x--;
-
-		result = NewSquare;
-	} 
-	else if (body->xOffsetInternal > high)
-	{
-		body->xOffsetInternal -= offset;
-		body->x++;
-
-		result = NewSquare;
-	} 
-	else if (body->yOffsetInternal < -low) 
-	{
-		body->yOffsetInternal += offset;
-		body->y--;
-
-		result = NewSquare;
-	} 
-	else if (body->yOffsetInternal > high)
-	{
-		body->yOffsetInternal -= offset;
-		body->y++;
-
-		result = NewSquare;
-	}
-
-	body->xOffset = body->xOffsetInternal / (75 * 60);
-	body->yOffset = body->yOffsetInternal / (75 * 60);
 
 	return result;
 }
