@@ -47,14 +47,17 @@ void game_tick(PacmanGame *game);
 //Renders the game in its current state.
 void game_render(PacmanGame *game);
 
-//Returns true if the game is finished and is ready to hand back to the menu system
+//Returns true if the game is finished and is ready to hand back to the menu system.
 bool is_game_over(PacmanGame *game);
 
-//call this at start of level 1 to initialize all entities and game objects
+//Call this at start of level 1 to initialize all entities and game objects.
 void gamestart_init(PacmanGame *game);
 
-//call this at the start of each level to reinitialize all entities to a default state
+//Call this at the start of each level to reinitialize all entities to a default state.
 void level_init(PacmanGame *game);
+
+//Call after pacman dies to reinitialize entities to continue the same level.
+void pacdeath_init(PacmanGame *game);
 
 //Returns the length of the given integer.
 int int_length(int num);

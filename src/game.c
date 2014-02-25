@@ -231,13 +231,14 @@ static void enter_state(PacmanGame *game, GameState state)
 		case WinState:
 			game->currentLevel++;
 			game->gameState = LevelBeginState;
-
+			level_init(game);
 			break;
 		case DeathState:
 			// Player died and is starting a new game, subtract a life
 			if (state == LevelBeginState)
 			{
 				game->pacman.livesLeft--;
+				pacdeath_init(game);
 			}
 		default: ; //do nothing
 	}
@@ -250,7 +251,7 @@ static void enter_state(PacmanGame *game, GameState state)
 
 			break;
 		case LevelBeginState:
-			level_init(game);
+			
 			break;
 		case GamePlayState:
 			break;
@@ -566,6 +567,15 @@ void level_init(PacmanGame *game)
 	ghosts_init(game->ghosts);
 
 	//reset fruit
+	reset_fruit(&game->gameFruit1);
+	reset_fruit(&game->gameFruit2);
+}
+
+void pacdeath_init(PacmanGame *game)
+{
+	pacman_level_init(&game->pacman);
+	ghosts_init(game->ghosts);
+
 	reset_fruit(&game->gameFruit1);
 	reset_fruit(&game->gameFruit2);
 }
