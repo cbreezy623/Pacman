@@ -25,7 +25,6 @@ static bool resolve_telesquare(PhysicsBody *body);          //wraps the body aro
 void game_tick(PacmanGame *game)
 {
 	unsigned dt = ticks_game() - game->ticksSinceModeChange;
-
 	switch (game->gameState)
 	{
 		case GameBeginState:
@@ -387,11 +386,61 @@ static void process_player(PacmanGame *game)
 	resolve_telesquare(&pacman->body);
 }
 
+static void update_ghost_movement(Ghost *g, PacmanGame *game){
+	unsigned dt = ticks_game() - game->ticksSinceModeChange;
+	if(game->currentLevel == 1){
+		if(dt <= 7 * 1000){g->movementMode = Scatter;}
+		else if(dt <= 27 * 1000){g->movementMode = Chase;}
+		else if(dt <= 34 * 1000){g->movementMode = Scatter;}
+		else if(dt <= 54 * 1000){g->movementMode = Chase;}
+		else if(dt <= 59 * 1000){g->movementMode = Scatter;}
+		else if(dt <= 79 * 1000){g->movementMode = Chase;}
+		else if(dt <= 84 * 1000){g->movementMode = Scatter;}
+		else{g->movementMode = Chase;}
+
+		printf("%d\n", dt);
+		if(g->movementMode == Scatter)
+			printf("Scatter\n");
+		else if(g->movementMode == Chase)
+			printf("Chase\n");
+	}
+	else if(game->currentLevel < 5){
+		if(dt <= 7 * 600){g->movementMode = Scatter;}
+		else if(dt <= 27 * 600){g->movementMode = Chase;}
+		else if(dt <= 34 * 600){g->movementMode = Scatter;}
+		else if(dt <= 54 * 600){g->movementMode = Chase;}
+		else if(dt <= 59 * 600){g->movementMode = Scatter;}
+		else if(dt <= 79 * 600){g->movementMode = Chase;}
+		else if(dt <= 84 * 600){g->movementMode = Scatter;}
+		else{g->movementMode = Chase;}
+	}
+	else{
+		if(dt <= 7 * 600){g->movementMode = Scatter;}
+		else if(dt <= 27 * 600){g->movementMode = Chase;}
+		else if(dt <= 34 * 600){g->movementMode = Scatter;}
+		else if(dt <= 54 * 600){g->movementMode = Chase;}
+		else if(dt <= 59 * 600){g->movementMode = Scatter;}
+		else if(dt <= 79 * 600){g->movementMode = Chase;}
+		else if(dt <= 84 * 600){g->movementMode = Scatter;}
+		else{g->movementMode = Chase;}
+	}
+}
+
+static void update_ghost_speed(Ghost *g, PacmanGame *game){
+	if(g->movementMode == Chase || g->movementMode == Scatter){
+		if(game->currentLevel == 1){g->body.velocity = 75;}
+		else if(game->currentLevel < 5){g->body.velocity = 85;}
+		else {g->body.velocity = 95;}
+	}
+}
+
 static void process_ghosts(PacmanGame *game)
 {
 	for (int i = 0; i < 4; i++)
 	{
 		Ghost *g = &game->ghosts[i];
+		update_ghost_movement(g, game);
+		update_ghost_speed(g, game);
 
 		if (g->movementMode == InPen)
 		{
