@@ -8,7 +8,7 @@
 # Project Specific Part #
 #########################
 Project := game
-Modes   := Debug #Release# - uncomment for release build too`
+Modes   := Debug Release# - uncomment for release build too`
 
 # Directory where target binary is created and object files
 TargetDir         := bin
