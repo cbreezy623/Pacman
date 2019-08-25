@@ -59,7 +59,7 @@ all: $(Modes)
 
 clean:
 	@echo clean: $(Project)
-	@echo rm -rf $(TargetDir)
+	rm -rf $(TargetDir)
 
 test:	Release
 	$(call TargetFilename,Release)
