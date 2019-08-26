@@ -98,7 +98,15 @@ void game_tick(PacmanGame *game)
 			if (key_held(SDLK_k)) enter_state(game, DeathState);
 
 			else if (allPelletsEaten) enter_state(game, WinState);
-			else if (collidedWithGhost) enter_state(game, DeathState);
+			else if (collidedWithGhost){
+				switch(game->recentCollision){
+					case NormalCollision:
+						enter_state(game, DeathState);
+						break;
+					default:
+						break;
+				}
+			}
 
 			break;
 		case WinState:
@@ -638,7 +646,13 @@ static bool check_pacghost_collision(PacmanGame *game)
 	{
 		Ghost *g = &game->ghosts[i];
 
-		if (collides(&game->pacman.body, &g->body)) return true;
+		if (collides(&game->pacman.body, &g->body)){
+			if(g->movementMode == Frightened)
+				game->recentCollision = FrightenedCollision;
+			else
+				game->recentCollision = NormalCollision;
+			return true;
+		}
 	}
 
 	return false;

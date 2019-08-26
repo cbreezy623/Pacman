@@ -26,6 +26,11 @@ typedef enum
 	SameSquare  //Entity has moved within square without moving over the center
 } MovementResult;
 
+typedef enum{
+	NormalCollision,
+	FrightenedCollision
+} CollisionType;
+
 //Determines if the bodies collide based soley on their square on the board.
 bool collides(PhysicsBody *body1, PhysicsBody *body2);
 

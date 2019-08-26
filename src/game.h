@@ -5,6 +5,7 @@
 #include "ghost.h"
 #include "pacman.h"
 #include "pellet.h"
+#include "physics.h"
 
 typedef enum
 {
@@ -43,6 +44,7 @@ typedef struct
 	int frightenedSinceDeath; //used subtracting frames while frightened
 	unsigned int frightenedStart;
 	unsigned int gameFramesOffset;
+	CollisionType recentCollision;
 } PacmanGame;
 
 //Updates the game 1 tick, or 1/60th of a second.
