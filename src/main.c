@@ -194,7 +194,7 @@ static void process_events(void)
 
 static void key_down_hacks(int keycode)
 {
-	if (keycode == SDLK_RETURN) pacmanGame.currentLevel++;
+	if (state == Menu && keycode == SDLK_RETURN) pacmanGame.currentLevel++;
 	if (keycode == SDLK_BACKSPACE) menuSystem.ticksSinceModeChange = SDL_GetTicks();
 
 	static bool rateSwitch = false;
