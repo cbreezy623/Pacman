@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 void ghosts_init(Ghost ghosts[4])
 {
@@ -69,6 +70,11 @@ void send_to_home(Ghost *ghost, GhostType type)
 
 	ghost->targetX = targetX;
 	ghost->targetY = targetY;
+}
+
+void send_to_rand(Ghost *ghost){
+	ghost->targetX = rand() % BOARD_LENGTH;
+	ghost->targetY = rand() % BOARD_HEIGHT;
 }
 
 typedef struct
@@ -150,10 +156,16 @@ void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pa
 		case Clyde:  execute_orange_logic(targetGhost, pacman);         break;
 		case Pinky:  execute_pink_logic(targetGhost, pacman);           break;
 	}
-	if (targetGhost->movementMode == Scatter)
-	{
-		send_to_home(targetGhost, type);
-		return;
+	
+	switch(targetGhost->movementMode){
+		case Scatter:
+			send_to_home(targetGhost, type);
+			break;
+		case Frightened:
+			send_to_rand(targetGhost);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -258,7 +270,7 @@ int fright_time(int level){
 			time = 5;
 			break;
 		case 3:
-			time = 4; 
+			time = 4;
 			break;
 		case 4:
 			time = 3;

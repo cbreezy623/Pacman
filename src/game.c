@@ -33,6 +33,7 @@ void game_tick(PacmanGame *game)
 			break;
 		case LevelBeginState:
 			// similar to game begin mode except no sound, no "Player 1", and slightly shorter duration
+			game->frightened = false;
 			break;
 		case GamePlayState:
 			// everyone can move and this is the standard 'play' game mode
@@ -125,7 +126,7 @@ void game_tick(PacmanGame *game)
 
 void game_render(PacmanGame *game)
 {
-	printf("Frame Offset: %u\n", game->gameFramesOffset);
+	//printf("Frame Offset: %u\n", game->gameFramesOffset);
 
 	unsigned dt = ticks_game() - game->ticksSinceModeChange;
 
@@ -230,6 +231,7 @@ static void enter_state(PacmanGame *game, GameState state)
 			break;
 		case WinState:
 			game->currentLevel++;
+			game->frightenedSinceDeath = 0;
 			game->gameState = LevelBeginState;
 			level_init(game);
 			break;
@@ -240,6 +242,7 @@ static void enter_state(PacmanGame *game, GameState state)
 				game->pacman.livesLeft--;
 				pacdeath_init(game);
 			}
+			game->frightenedSinceDeath = 0;
 		default: ; //do nothing
 	}
 
@@ -396,43 +399,51 @@ static void process_player(PacmanGame *game)
 }
 
 static void update_ghost_movement(Ghost *g, PacmanGame *game){
-	unsigned dt = ticks_game() - game->ticksSinceModeChange;
+	unsigned int currFrame = frames_game();
+	unsigned int frameDiff = currFrame - game->gameFramesOffset;
+	unsigned int frameRate = 60;
+	unsigned int frameRemoveFright = frameDiff - frameRate * game->frightenedSinceDeath * fright_time(game->currentLevel);
+
 	if(game->currentLevel == 1){
-		if(dt <= 7 * 1000){g->movementMode = Scatter;}
-		else if(dt <= 27 * 1000){g->movementMode = Chase;}
-		else if(dt <= 34 * 1000){g->movementMode = Scatter;}
-		else if(dt <= 54 * 1000){g->movementMode = Chase;}
-		else if(dt <= 59 * 1000){g->movementMode = Scatter;}
-		else if(dt <= 79 * 1000){g->movementMode = Chase;}
-		else if(dt <= 84 * 1000){g->movementMode = Scatter;}
+		if(frameRemoveFright <= 7 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 27 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 34 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 54 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 59 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 79 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 84 * frameRate){g->movementMode = Scatter;}
 		else{g->movementMode = Chase;}
 
-		//printf("%d\n", dt);
-		//if(g->movementMode == Scatter)
-		//	printf("Scatter\n");
-		//else if(g->movementMode == Chase)
-		//	printf("Chase\n");
+		
 	}
 	else if(game->currentLevel < 5){
-		if(dt <= 7 * 600){g->movementMode = Scatter;}
-		else if(dt <= 27 * 600){g->movementMode = Chase;}
-		else if(dt <= 34 * 600){g->movementMode = Scatter;}
-		else if(dt <= 54 * 600){g->movementMode = Chase;}
-		else if(dt <= 59 * 600){g->movementMode = Scatter;}
-		else if(dt <= 79 * 600){g->movementMode = Chase;}
-		else if(dt <= 84 * 600){g->movementMode = Scatter;}
+		if(frameRemoveFright <= 7 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 27 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 34 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 54 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 59 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 1092 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 1092 * frameRate + 1){g->movementMode = Scatter;}
 		else{g->movementMode = Chase;}
 	}
 	else{
-		if(dt <= 7 * 600){g->movementMode = Scatter;}
-		else if(dt <= 27 * 600){g->movementMode = Chase;}
-		else if(dt <= 34 * 600){g->movementMode = Scatter;}
-		else if(dt <= 54 * 600){g->movementMode = Chase;}
-		else if(dt <= 59 * 600){g->movementMode = Scatter;}
-		else if(dt <= 79 * 600){g->movementMode = Chase;}
-		else if(dt <= 84 * 600){g->movementMode = Scatter;}
+		if(frameRemoveFright <= 5 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 20 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 25 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 45 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 50 * frameRate){g->movementMode = Scatter;}
+		else if(frameRemoveFright <= 1087 * frameRate){g->movementMode = Chase;}
+		else if(frameRemoveFright <= 1087 * frameRate + 1){g->movementMode = Scatter;}
 		else{g->movementMode = Chase;}
 	}
+	
+	//printf("Frame Remove Fright: %d\n", frameRemoveFright);
+	//printf("Frightened Since Death: %d\n", game->frightenedSinceDeath);
+	//printf("%d %d\n", currFrame, game->gameFramesOffset);
+	//if(g->movementMode == Scatter)
+	//	printf("Scatter\n");
+	//else if(g->movementMode == Chase)
+	//	printf("Chase\n");
 }
 
 static void update_ghost_speed(Ghost *g, PacmanGame *game){
@@ -457,8 +468,8 @@ static void process_ghosts(PacmanGame *game)
 				update_ghost_movement(g, game);
 			}
 			else{
-				printf("Ghost %d is Frightened\n", i);
-			}	
+				//printf("Ghost %d is Frightened\n", i);
+			}
 		}
 		else{
 			update_ghost_movement(g, game);
@@ -566,16 +577,17 @@ static void process_fruit(PacmanGame *game)
 static void frightened_set(PacmanGame *game, Pellet *p){
 	if(p->type == LargePellet){
 		game->frightened = true;
+		game->frightenedSinceDeath = game->frightenedSinceDeath + 1;
 		game->frightenedStart = frames_game();
 
 		for(int i = 0; i < 4; i++){
 			Ghost *g = &game->ghosts[i];
 			if(g->movementMode != Eaten)
 				g->movementMode = Frightened;
-			printf("%d %d\n", i, g->movementMode == Frightened);
+			//printf("%d %d\n", i, g->movementMode == Frightened);
 		}
 
-		printf("Frightened: %d %u\n", (int)game->frightened, game->frightenedStart);
+		//printf("Frightened: %d %u\n", (int)game->frightened, game->frightenedStart);
 	}
 }
 

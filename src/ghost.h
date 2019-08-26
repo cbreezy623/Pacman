@@ -43,6 +43,7 @@ void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pa
 Direction next_direction(Ghost *ghost, Board *board);
 
 void send_to_home(Ghost *ghost, GhostType type);
+void send_to_rand(Ghost *ghost);
 
 void execute_red_logic(Ghost *redGhost, Pacman *pacman);
 void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman);
