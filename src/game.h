@@ -39,6 +39,9 @@ typedef struct
 	GameFruit gameFruit1, gameFruit2;
 	int highscore;
 	int currentLevel;
+	bool frightened;
+	unsigned int frightenedStart;
+	unsigned int gameFramesOffset;
 } PacmanGame;
 
 //Updates the game 1 tick, or 1/60th of a second.

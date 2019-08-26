@@ -33,7 +33,6 @@ void game_tick(PacmanGame *game)
 			break;
 		case LevelBeginState:
 			// similar to game begin mode except no sound, no "Player 1", and slightly shorter duration
-
 			break;
 		case GamePlayState:
 			// everyone can move and this is the standard 'play' game mode
@@ -126,6 +125,8 @@ void game_tick(PacmanGame *game)
 
 void game_render(PacmanGame *game)
 {
+	printf("Frame Offset: %u\n", game->gameFramesOffset);
+
 	unsigned dt = ticks_game() - game->ticksSinceModeChange;
 
 	//common stuff that is rendered in every mode:
@@ -253,6 +254,7 @@ static void enter_state(PacmanGame *game, GameState state)
 			
 			break;
 		case GamePlayState:
+			game->gameFramesOffset = frames_game();
 			break;
 		case WinState:
 
@@ -293,7 +295,7 @@ bool can_move(Pacman *pacman, Board *board, Direction dir)
 
 static void update_player_speed(Pacman *pacman, PacmanGame *game){
 	pacman->body.velocity = pacman_speed_normal(game->currentLevel);
-	printf("Pacman: %d\n", pacman->body.velocity);
+	//printf("Pacman: %d\n", pacman->body.velocity);
 }
 
 static void process_player(PacmanGame *game)
@@ -441,7 +443,7 @@ static void update_ghost_speed(Ghost *g, PacmanGame *game){
 		g->body.velocity = ghost_speed_fright(game->currentLevel);
 	}
 
-	printf("Ghost %d\n", g->body.velocity);
+	//printf("Ghost %d\n", g->body.velocity);
 }
 
 static void process_ghosts(PacmanGame *game)
@@ -449,8 +451,18 @@ static void process_ghosts(PacmanGame *game)
 	for (int i = 0; i < 4; i++)
 	{
 		Ghost *g = &game->ghosts[i];
-		update_ghost_movement(g, game);
 		update_ghost_speed(g, game);
+		if(g->movementMode == Frightened){
+			if(frames_game() >= 60 * fright_time(game->currentLevel) + game->frightenedStart){
+				update_ghost_movement(g, game);
+			}
+			else{
+				printf("Ghost %d is Frightened\n", i);
+			}	
+		}
+		else{
+			update_ghost_movement(g, game);
+		}
 
 		if (g->movementMode == InPen)
 		{
@@ -551,6 +563,22 @@ static void process_fruit(PacmanGame *game)
 	}
 }
 
+static void frightened_set(PacmanGame *game, Pellet *p){
+	if(p->type == LargePellet){
+		game->frightened = true;
+		game->frightenedStart = frames_game();
+
+		for(int i = 0; i < 4; i++){
+			Ghost *g = &game->ghosts[i];
+			if(g->movementMode != Eaten)
+				g->movementMode = Frightened;
+			printf("%d %d\n", i, g->movementMode == Frightened);
+		}
+
+		printf("Frightened: %d %u\n", (int)game->frightened, game->frightenedStart);
+	}
+}
+
 static void process_pellets(PacmanGame *game)
 {
 	//if pacman and pellet collide
@@ -571,6 +599,7 @@ static void process_pellets(PacmanGame *game)
 			holder->numLeft--;
 
 			p->eaten = true;
+			frightened_set(game, p);
 			game->pacman.score += pellet_points(p);
 
 			//play eat sound
