@@ -456,7 +456,12 @@ static void update_ghost_movement(Ghost *g, PacmanGame *game){
 
 static void update_ghost_speed(Ghost *g, PacmanGame *game){
 	if(g->movementMode == Chase || g->movementMode == Scatter){
-		g->body.velocity = ghost_speed_normal(game->currentLevel);
+		if((g->body.x < 4 || g->body.x > 24) && g->body.y == 14){
+			g->body.velocity = ghost_speed_tunnel(game->currentLevel);
+		}
+		else{
+			g->body.velocity = ghost_speed_normal(game->currentLevel);
+		}
 	}
 	else{
 		g->body.velocity = ghost_speed_fright(game->currentLevel);
