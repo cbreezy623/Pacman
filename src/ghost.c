@@ -99,6 +99,7 @@ Direction next_direction(Ghost *ghost, Board *board)
 	//if there is a tie, we break it in order Up, Left, Down, Right
 
 	//keeps ghost in teleport tunnel
+	//this is hacky TODO: make something that's better
 	if(ghost->body.y == 14){
 		printf("%d %d\n", ghost->body.x, ghost->body.y);
 		if(ghost->body.x < 2 || ghost->body.y > 25){
@@ -128,8 +129,8 @@ Direction next_direction(Ghost *ghost, Board *board)
 		int testY = ghost->body.y + y + offsets[i].y;
 
 		//allow for when ghost is going through teleporter
-		if (testX == 0) testX = 26;
-		if (testX == 27) testX = 1;
+		if (testX == 0 && testY == 14) testX = 26;
+		if (testX == 27 && testY == 14) testX = 1;
 
 		//make sure the square is a valid walkable square
 		if (!(is_valid_square(board, testX, testY) || is_tele_square(testX, testY))) continue;
