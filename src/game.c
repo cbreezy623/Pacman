@@ -291,6 +291,11 @@ bool can_move(Pacman *pacman, Board *board, Direction dir)
 	return is_valid_square(board, newX, newY) || is_tele_square(newX, newY);
 }
 
+static void update_player_speed(Pacman *pacman, PacmanGame *game){
+	pacman->body.velocity = pacman_speed_normal(game->currentLevel);
+	printf("Pacman: %d\n", pacman->body.velocity);
+}
+
 static void process_player(PacmanGame *game)
 {
 	Pacman *pacman = &game->pacman;
@@ -301,6 +306,8 @@ static void process_player(PacmanGame *game)
 		pacman->missedFrames--;
 		return;
 	}
+
+	update_player_speed(pacman, game);
 
 	Direction oldLastAttemptedDir = pacman->lastAttemptedMoveDirection;
 
@@ -398,11 +405,11 @@ static void update_ghost_movement(Ghost *g, PacmanGame *game){
 		else if(dt <= 84 * 1000){g->movementMode = Scatter;}
 		else{g->movementMode = Chase;}
 
-		printf("%d\n", dt);
-		if(g->movementMode == Scatter)
-			printf("Scatter\n");
-		else if(g->movementMode == Chase)
-			printf("Chase\n");
+		//printf("%d\n", dt);
+		//if(g->movementMode == Scatter)
+		//	printf("Scatter\n");
+		//else if(g->movementMode == Chase)
+		//	printf("Chase\n");
 	}
 	else if(game->currentLevel < 5){
 		if(dt <= 7 * 600){g->movementMode = Scatter;}
@@ -428,10 +435,13 @@ static void update_ghost_movement(Ghost *g, PacmanGame *game){
 
 static void update_ghost_speed(Ghost *g, PacmanGame *game){
 	if(g->movementMode == Chase || g->movementMode == Scatter){
-		if(game->currentLevel == 1){g->body.velocity = 75;}
-		else if(game->currentLevel < 5){g->body.velocity = 85;}
-		else {g->body.velocity = 95;}
+		g->body.velocity = ghost_speed_normal(game->currentLevel);
 	}
+	else{
+		g->body.velocity = ghost_speed_fright(game->currentLevel);
+	}
+
+	printf("Ghost %d\n", g->body.velocity);
 }
 
 static void process_ghosts(PacmanGame *game)
