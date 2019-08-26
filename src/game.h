@@ -40,6 +40,7 @@ typedef struct
 	int highscore;
 	int currentLevel;
 	bool frightened;
+	int frightenedSinceDeath; //used subtracting frames while frightened
 	unsigned int frightenedStart;
 	unsigned int gameFramesOffset;
 } PacmanGame;
