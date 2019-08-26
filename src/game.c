@@ -582,8 +582,12 @@ static void frightened_set(PacmanGame *game, Pellet *p){
 
 		for(int i = 0; i < 4; i++){
 			Ghost *g = &game->ghosts[i];
-			if(g->movementMode != Eaten)
+			if(g->movementMode != Eaten){
 				g->movementMode = Frightened;
+				g->nextDirection = dir_opposite(g->body.curDir);
+				//g->body.curDir = dir_opposite(g->body.curDir);
+				//g->body.nextDir = g->body.curDir;
+			}
 			//printf("%d %d\n", i, g->movementMode == Frightened);
 		}
 
