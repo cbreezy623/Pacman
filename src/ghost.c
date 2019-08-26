@@ -247,3 +247,65 @@ int ghost_speed_tunnel(int level)
 	if (level <= 20) return 50;
 	return 50;
 }
+
+int fright_time(int level){
+	int time;
+	switch(level){
+		case 1:
+			time = 6;
+			break;
+		case 2:
+			time = 5;
+			break;
+		case 3:
+			time = 4; 
+			break;
+		case 4:
+			time = 3;
+			break;
+		case 5:
+			time = 2;
+			break;
+		case 6:
+			time = 5;
+			break;
+		case 7:
+			time = 2;
+			break;
+		case 8:
+			time = 2;
+			break;
+		case 9:
+			time = 1;
+			break;
+		case 10:
+			time = 5;
+			break;
+		case 11:
+			time = 2;
+			break;
+		case 12:
+			time = 1;
+			break;
+		case 13:
+			time = 1;
+			break;
+		case 14:
+			time = 3;
+			break;
+		case 15:
+			time = 1;
+			break;
+		case 16:
+			time = 1;
+			break;
+		case 18:
+			time = 1;
+			break;
+		default:
+			time = 0;
+			break;
+	}
+
+	return time;
+}

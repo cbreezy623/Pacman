@@ -52,3 +52,5 @@ void execute_blue_logic(Ghost *blueGhost, Ghost *redGhost, Pacman *pacman);
 int ghost_speed_normal(int level);
 int ghost_speed_fright(int level);
 int ghost_speed_tunnel(int level);
+
+int fright_time(int level);
