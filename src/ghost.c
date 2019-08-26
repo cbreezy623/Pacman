@@ -98,11 +98,28 @@ Direction next_direction(Ghost *ghost, Board *board)
 	//we then select the one with the smallest distance
 	//if there is a tie, we break it in order Up, Left, Down, Right
 
+	//keeps ghost in teleport tunnel
+	if(ghost->body.y == 14){
+		printf("%d %d\n", ghost->body.x, ghost->body.y);
+		if(ghost->body.x < 2 || ghost->body.y > 25){
+			if(ghost->nextDirection == Up){
+				ghost->transDirection = Right;
+				ghost->body.curDir = Right;
+				ghost->body.nextDir = Right;
+				return Right;
+			}
+			else
+				return ghost->transDirection;
+		}
+	}
+
 	Targetcalc targets[4] =  { {Up, INT_MAX}, {Left, INT_MAX}, {Down, INT_MAX}, {Right, INT_MAX}};
 	Boardoffset offsets[4] = { {0, -1}, {-1, 0}, {0, 1}, {1, 0} };
 
 	int x, y;
 	dir_xy(ghost->nextDirection, &x, &y);
+
+	
 
 	//calculate the distances between the squares (or if it is even valid)
 	for (int i = 0; i < 4; i++)
