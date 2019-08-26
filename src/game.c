@@ -34,6 +34,7 @@ void game_tick(PacmanGame *game)
 		case LevelBeginState:
 			// similar to game begin mode except no sound, no "Player 1", and slightly shorter duration
 			game->frightened = false;
+			game->currentlyFrightened = 0;
 			break;
 		case GamePlayState:
 			// everyone can move and this is the standard 'play' game mode
@@ -476,9 +477,12 @@ static void process_ghosts(PacmanGame *game)
 	{
 		Ghost *g = &game->ghosts[i];
 		update_ghost_speed(g, game);
-		if(g->movementMode == Frightened){
+		if(g->movementMode == Frightened || g->movementMode == Eaten){
 			if(frames_game() >= 60 * fright_time(game->currentLevel) + game->frightenedStart){
-				update_ghost_movement(g, game);
+				if(g->movementMode != Eaten)
+					update_ghost_movement(g, game);
+				game->frightened = false;
+				game->currentlyFrightened = 0;
 			}
 			else{
 				//printf("Ghost %d is Frightened\n", i);
@@ -592,19 +596,15 @@ static void frightened_set(PacmanGame *game, Pellet *p){
 		game->frightened = true;
 		game->frightenedSinceDeath = game->frightenedSinceDeath + 1;
 		game->frightenedStart = frames_game();
+		game->currentlyFrightened = 4;
 
 		for(int i = 0; i < 4; i++){
 			Ghost *g = &game->ghosts[i];
 			if(g->movementMode != Eaten){
 				g->movementMode = Frightened;
 				g->nextDirection = dir_opposite(g->body.curDir);
-				//g->body.curDir = dir_opposite(g->body.curDir);
-				//g->body.nextDir = g->body.curDir;
 			}
-			//printf("%d %d\n", i, g->movementMode == Frightened);
 		}
-
-		//printf("Frightened: %d %u\n", (int)game->frightened, game->frightenedStart);
 	}
 }
 
@@ -652,8 +652,14 @@ static bool check_pacghost_collision(PacmanGame *game)
 		Ghost *g = &game->ghosts[i];
 
 		if (collides(&game->pacman.body, &g->body)){
-			if(g->movementMode == Frightened)
+			if(g->movementMode == Frightened){
 				game->recentCollision = FrightenedCollision;
+				g->movementMode = Eaten;
+				game->pacman.score += 200;
+				game->currentlyFrightened--;
+			}
+			else if(g->movementMode == Eaten)
+				return false;
 			else
 				game->recentCollision = NormalCollision;
 			return true;

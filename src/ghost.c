@@ -101,7 +101,7 @@ Direction next_direction(Ghost *ghost, Board *board)
 	//keeps ghost in teleport tunnel
 	//this is hacky TODO: make something that's better
 	if(ghost->body.y == 14){
-		printf("%d %d\n", ghost->body.x, ghost->body.y);
+		//printf("%d %d\n", ghost->body.x, ghost->body.y);
 		if(ghost->body.x < 2 || ghost->body.y > 25){
 			if(ghost->nextDirection == Up){
 				ghost->transDirection = Right;

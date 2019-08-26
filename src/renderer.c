@@ -401,10 +401,10 @@ void draw_pacman_lives(int numLives)
 
 void draw_ghost(Ghost *ghost)
 {
-	SDL_Surface *image;
+	SDL_Surface *image = NULL;
 	if(ghost->movementMode == Frightened)
 		image = scared_ghost_image(0);
-	else
+	else if(ghost->movementMode != Eaten)
 		image = ghost_image(ghost->ghostType, ghost->body.curDir, 0);
 
 	int x = ghost->body.x;
