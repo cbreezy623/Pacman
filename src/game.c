@@ -727,8 +727,8 @@ static bool resolve_telesquare(PhysicsBody *body)
 
 	if (body->y != 14) return false;
 
-	if (body->x == -1) { body->x = 27; return true; }
-	if (body->x == 28) { body->x =  0; return true; }
+	if (body->x == -1) { body->x = 27; body->y = 14; return true; }
+	if (body->x == 28) { body->x =  0; body->y = 14; return true; }
 
 	return false;
 }
