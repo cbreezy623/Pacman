@@ -464,6 +464,9 @@ static void update_ghost_speed(Ghost *g, PacmanGame *game){
 			g->body.velocity = ghost_speed_normal(game->currentLevel);
 		}
 	}
+	else if(g->movementMode == Eaten){
+		g->body.velocity = 200;
+	}
 	else{
 		g->body.velocity = ghost_speed_fright(game->currentLevel);
 	}
@@ -525,7 +528,8 @@ static void process_ghosts(PacmanGame *game)
 			//if they are in a new tile, rerun their target update logic
 			execute_ghost_logic(g, g->ghostType, &game->ghosts[0], &game->pacman);
 
-			g->nextDirection = next_direction(g, &game->board);
+			g->nextDirection = next_direction(g, &game->board, g->newlyFrightened);
+			g->newlyFrightened = false;
 		}
 		else if (result == OverCenter)
 		{
@@ -602,7 +606,8 @@ static void frightened_set(PacmanGame *game, Pellet *p){
 			Ghost *g = &game->ghosts[i];
 			if(g->movementMode != Eaten){
 				g->movementMode = Frightened;
-				g->nextDirection = dir_opposite(g->body.curDir);
+				g->newlyFrightened = true;
+				//g->nextDirection = dir_opposite(g->body.curDir); //doesn't work on corners
 			}
 		}
 	}

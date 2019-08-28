@@ -31,6 +31,7 @@ typedef struct
 	Direction nextDirection;  //direction ghost should face when reaching the center of the next tilea
 	GhostType ghostType;
 	MovementMode movementMode;
+	bool newlyFrightened;
 } Ghost;
 
 void ghosts_init(Ghost ghosts[4]);
@@ -40,7 +41,7 @@ void reset_ghost(Ghost *ghost, GhostType type);
 void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pacman *pacman);
 
 //gets the next direction the ghost will travel in based on their target square
-Direction next_direction(Ghost *ghost, Board *board);
+Direction next_direction(Ghost *ghost, Board *board, bool newlyFrightened);
 
 void send_to_home(Ghost *ghost, GhostType type);
 void send_to_rand(Ghost *ghost);

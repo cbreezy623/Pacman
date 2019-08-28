@@ -406,6 +406,8 @@ void draw_ghost(Ghost *ghost)
 		image = scared_ghost_image(0);
 	else if(ghost->movementMode != Eaten)
 		image = ghost_image(ghost->ghostType, ghost->body.curDir, 0);
+	else
+		image = ghost_eye_image(ghost->body.curDir);
 
 	int x = ghost->body.x;
 	int y = ghost->body.y + Y_OFFSET;

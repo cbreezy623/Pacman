@@ -89,7 +89,7 @@ typedef struct
 	int y;
 } Boardoffset;
 
-Direction next_direction(Ghost *ghost, Board *board)
+Direction next_direction(Ghost *ghost, Board *board, bool newlyFrightened)
 {
 	//ghost has just entered a new tile
 	//we look ahead to their next tile
@@ -161,6 +161,8 @@ Direction next_direction(Ghost *ghost, Board *board)
 			shortest.dir = targets[i].dir;
 		}
 	}
+
+	if(newlyFrightened) return reverseDir;
 
 	return shortest.dir;
 }
