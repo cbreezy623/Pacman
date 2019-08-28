@@ -45,6 +45,7 @@ Direction next_direction(Ghost *ghost, Board *board, bool newlyFrightened);
 
 void send_to_home(Ghost *ghost, GhostType type);
 void send_to_rand(Ghost *ghost);
+void send_to_pen(Ghost *ghost);
 
 void execute_red_logic(Ghost *redGhost, Pacman *pacman);
 void execute_pink_logic(Ghost *pinkGhost, Pacman *pacman);

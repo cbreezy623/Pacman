@@ -407,7 +407,7 @@ static void process_player(PacmanGame *game)
 	resolve_telesquare(&pacman->body);
 }
 
-static void update_ghost_movement(Ghost *g, PacmanGame *game){
+static void normal_ghost_movement(Ghost *g, PacmanGame *game){
 	unsigned int currFrame = frames_game();
 	unsigned int frameDiff = currFrame - game->gameFramesOffset;
 	unsigned int frameRate = 60;
@@ -422,8 +422,6 @@ static void update_ghost_movement(Ghost *g, PacmanGame *game){
 		else if(frameRemoveFright <= 79 * frameRate){g->movementMode = Chase;}
 		else if(frameRemoveFright <= 84 * frameRate){g->movementMode = Scatter;}
 		else{g->movementMode = Chase;}
-
-		
 	}
 	else if(game->currentLevel < 5){
 		if(frameRemoveFright <= 7 * frameRate){g->movementMode = Scatter;}
@@ -445,14 +443,10 @@ static void update_ghost_movement(Ghost *g, PacmanGame *game){
 		else if(frameRemoveFright <= 1087 * frameRate + 1){g->movementMode = Scatter;}
 		else{g->movementMode = Chase;}
 	}
-	
-	//printf("Frame Remove Fright: %d\n", frameRemoveFright);
-	//printf("Frightened Since Death: %d\n", game->frightenedSinceDeath);
-	//printf("%d %d\n", currFrame, game->gameFramesOffset);
-	//if(g->movementMode == Scatter)
-	//	printf("Scatter\n");
-	//else if(g->movementMode == Chase)
-	//	printf("Chase\n");
+}
+
+static void update_ghost_movement(Ghost *g, PacmanGame *game){
+		normal_ghost_movement(g, game);
 }
 
 static void update_ghost_speed(Ghost *g, PacmanGame *game){
@@ -480,15 +474,14 @@ static void process_ghosts(PacmanGame *game)
 	{
 		Ghost *g = &game->ghosts[i];
 		update_ghost_speed(g, game);
+		
 		if(g->movementMode == Frightened || g->movementMode == Eaten){
 			if(frames_game() >= 60 * fright_time(game->currentLevel) + game->frightenedStart){
 				if(g->movementMode != Eaten)
 					update_ghost_movement(g, game);
+				
 				game->frightened = false;
 				game->currentlyFrightened = 0;
-			}
-			else{
-				//printf("Ghost %d is Frightened\n", i);
 			}
 		}
 		else{

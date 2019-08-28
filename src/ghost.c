@@ -77,6 +77,26 @@ void send_to_rand(Ghost *ghost){
 	ghost->targetY = rand() % BOARD_HEIGHT;
 }
 
+void send_to_pen(Ghost *ghost){
+	switch(ghost->ghostType){
+		case Blinky:
+			ghost->targetX = 14;
+			break;
+		case Inky:
+			ghost->targetX = 12;
+			break;
+		case Clyde:
+			ghost->targetX = 16;
+			break;
+		case Pinky:
+			ghost->targetX = 14;
+	}
+
+
+	ghost->targetX = 14;
+	ghost->targetY = 14;
+}
+
 typedef struct
 {
 	Direction dir;
@@ -184,6 +204,8 @@ void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pa
 		case Frightened:
 			send_to_rand(targetGhost);
 			break;
+		case Eaten:
+			send_to_pen(targetGhost);
 		default:
 			break;
 	}
