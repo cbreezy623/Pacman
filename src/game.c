@@ -509,7 +509,33 @@ static void process_ghosts(PacmanGame *game)
 			//then more em up out the gate
 			//when they are out of the gate, set them to be in normal chase mode then set them off on their way
 
+			if(g->body.y == 11){
+				update_ghost_movement(g, game);
+			}
+
+			if(g->body.x > 14){
+				g->body.curDir = Left;
+				g->body.nextDir = Left;
+			}
+			else if(g->body.x < 14){
+				g->body.curDir = Right;
+				g->body.nextDir = Right;
+			}
+			else if(g->body.x == 14){
+				g->body.curDir = Up;
+				g->body.nextDir = Up;
+			}
 			continue;
+		}
+
+		if (g->movementMode == Eaten){
+			if(g->body.x == 14 && (g->body.y >= 11 && g->body.y <= 14)){
+				g->body.nextDir = Down;
+				g->body.curDir = Down;
+			}
+			else if(g->body.x == 14 && g->body.y == 15){
+				g->movementMode = LeavingPen;
+			}
 		}
 
 		//all other modes can move normally (I think)
