@@ -413,7 +413,7 @@ static void normal_ghost_movement(Ghost *g, PacmanGame *game){
 
 	//these values should be updated to more accurately reflect the time ghosts
 	//spend in the pen
-	printf("%d\n", frameDiff);
+	//printf("%d\n", frameDiff);
 	if(g->movementMode == InPen){
 		switch(g->ghostType){
 			case Blinky:{break;}
