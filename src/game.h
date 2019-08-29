@@ -41,7 +41,7 @@ typedef struct
 	int highscore;
 	int currentLevel;
 	bool frightened;
-	int frightenedSinceDeath; //used subtracting frames while frightened
+	int frightenedThisLevel; //used subtracting frames while frightened
 	int currentlyFrightened;
 	unsigned int frightenedStart;
 	unsigned int gameFramesOffset;

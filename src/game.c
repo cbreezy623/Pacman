@@ -240,7 +240,8 @@ static void enter_state(PacmanGame *game, GameState state)
 			break;
 		case WinState:
 			game->currentLevel++;
-			game->frightenedSinceDeath = 0;
+			game->frightenedThisLevel = 0;
+			game->gameFramesOffset = frames_game();
 			game->gameState = LevelBeginState;
 			level_init(game);
 			break;
@@ -251,7 +252,6 @@ static void enter_state(PacmanGame *game, GameState state)
 				game->pacman.livesLeft--;
 				pacdeath_init(game);
 			}
-			game->frightenedSinceDeath = 0;
 		default: ; //do nothing
 	}
 
@@ -263,10 +263,8 @@ static void enter_state(PacmanGame *game, GameState state)
 
 			break;
 		case LevelBeginState:
-			
 			break;
 		case GamePlayState:
-			game->gameFramesOffset = frames_game();
 			break;
 		case WinState:
 
@@ -411,7 +409,20 @@ static void normal_ghost_movement(Ghost *g, PacmanGame *game){
 	unsigned int currFrame = frames_game();
 	unsigned int frameDiff = currFrame - game->gameFramesOffset;
 	unsigned int frameRate = 60;
-	unsigned int frameRemoveFright = frameDiff - frameRate * game->frightenedSinceDeath * fright_time(game->currentLevel);
+	unsigned int frameRemoveFright = frameDiff - frameRate * game->frightenedThisLevel * fright_time(game->currentLevel); //TODO subtract 350 per death
+
+	//these values should be updated to more accurately reflect the time ghosts
+	//spend in the pen
+	printf("%d\n", frameDiff);
+	if(g->movementMode == InPen){
+		switch(g->ghostType){
+			case Blinky:{break;}
+			case Inky:{if(frameDiff < 7 * frameRate) return; break;}
+			case Clyde:{if(frameDiff < 15 * frameRate) return; break;}
+			case Pinky:{if(frameDiff < 2 * frameRate) return; break;}
+			default: break;
+		}
+	}
 
 	if(game->currentLevel == 1){
 		if(frameRemoveFright <= 7 * frameRate){g->movementMode = Scatter;}
@@ -511,6 +522,7 @@ static void process_ghosts(PacmanGame *game)
 
 			if(g->body.y == 11){
 				update_ghost_movement(g, game);
+				continue;
 			}
 
 			if(g->body.x > 14){
@@ -525,16 +537,16 @@ static void process_ghosts(PacmanGame *game)
 				g->body.curDir = Up;
 				g->body.nextDir = Up;
 			}
-			continue;
 		}
 
 		if (g->movementMode == Eaten){
-			if(g->body.x == 14 && (g->body.y >= 11 && g->body.y <= 14)){
+			if(g->body.x == 14 && (g->body.y >= 11 && g->body.y < 14)){
 				g->body.nextDir = Down;
 				g->body.curDir = Down;
 			}
-			else if(g->body.x == 14 && g->body.y == 15){
+			else if(g->body.x == 14 && g->body.y == 14){
 				g->movementMode = LeavingPen;
+				g->body.velocity = ghost_speed_tunnel(game->currentLevel);
 			}
 		}
 
@@ -617,13 +629,13 @@ static void process_fruit(PacmanGame *game)
 static void frightened_set(PacmanGame *game, Pellet *p){
 	if(p->type == LargePellet){
 		game->frightened = true;
-		game->frightenedSinceDeath = game->frightenedSinceDeath + 1;
+		game->frightenedThisLevel = game->frightenedThisLevel + 1;
 		game->frightenedStart = frames_game();
 		game->currentlyFrightened = 4;
 
 		for(int i = 0; i < 4; i++){
 			Ghost *g = &game->ghosts[i];
-			if(g->movementMode != Eaten){
+			if(g->movementMode != Eaten && g->movementMode != InPen){
 				g->movementMode = Frightened;
 				g->newlyFrightened = true;
 				//g->nextDirection = dir_opposite(g->body.curDir); //doesn't work on corners

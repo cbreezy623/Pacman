@@ -29,14 +29,14 @@ void reset_ghost(Ghost *ghost, GhostType type)
 	switch (type)
 	{
 		case Blinky: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
-		//case Inky: { x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
-		//case Clyde: { x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
-		//case Pinky: { x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; next = Down; break; }
+		case Inky: { x = 12; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
+		case Clyde: { x = 16; y = 14; ox = -8; oy =  0; mode = InPen; dir = Up;   next = Down; break; }
+		case Pinky: { x = 14; y = 14; ox = -8; oy =  0; mode = InPen; dir = Down; next = Down; break; }
 
 		//testing
-		case Inky:  { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
-		case Clyde: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
-		case Pinky: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		//case Inky:  { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		//case Clyde: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
+		//case Pinky: { x = 14; y = 11; ox = -8; oy =  0; mode = Scatter; dir = Left; next = Left; break; }
 
 		default: printf("error ghost\naborting\n"); exit(1);
 	}
