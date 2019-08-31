@@ -236,12 +236,14 @@ static void enter_state(PacmanGame *game, GameState state)
 	{
 		case GameBeginState:
 			game->pacman.livesLeft--;
+			game->deathsThisLevel = 0;
 
 			break;
 		case WinState:
 			game->currentLevel++;
+			game->deathsThisLevel = 0;
 			game->frightenedThisLevel = 0;
-			game->gameFramesOffset = frames_game();
+			game->gameFramesOffset = frames_game() + 1000; //0 at beginning of level
 			game->gameState = LevelBeginState;
 			level_init(game);
 			break;
@@ -250,6 +252,7 @@ static void enter_state(PacmanGame *game, GameState state)
 			if (state == LevelBeginState)
 			{
 				game->pacman.livesLeft--;
+				game->deathsThisLevel++;
 				pacdeath_init(game);
 			}
 		default: ; //do nothing
@@ -260,6 +263,7 @@ static void enter_state(PacmanGame *game, GameState state)
 	{
 		case GameBeginState:
 			play_sound(LevelStartSound);
+			game->gameFramesOffset = frames_game() + 1000; //0 at beginning of level
 
 			break;
 		case LevelBeginState:
@@ -408,12 +412,25 @@ static void process_player(PacmanGame *game)
 static void normal_ghost_movement(Ghost *g, PacmanGame *game){
 	unsigned int currFrame = frames_game();
 	unsigned int frameDiff = currFrame - game->gameFramesOffset;
+	
+	//fixes diff and offset if signed value f frameDiff expression is negative
+	if(game->gameFramesOffset > currFrame){
+		frameDiff = 0;
+		game->gameFramesOffset = currFrame;
+	}
+	else{
+		frameDiff -= 350 * game->deathsThisLevel;
+	}
+
 	unsigned int frameRate = 60;
-	unsigned int frameRemoveFright = frameDiff - frameRate * game->frightenedThisLevel * fright_time(game->currentLevel); //TODO subtract 350 per death
+	unsigned int frameRemoveFright = frameDiff -
+		frameRate * game->frightenedThisLevel * fright_time(game->currentLevel);
+	
 
 	//these values should be updated to more accurately reflect the time ghosts
 	//spend in the pen
-	//printf("%d\n", frameDiff);
+	//printf("%u\n", frameDiff);
+	printf("%d\n", game->frightenedThisLevel);
 	if(g->movementMode == InPen){
 		switch(g->ghostType){
 			case Blinky:{break;}
@@ -714,6 +731,9 @@ void gamestart_init(PacmanGame *game)
 	//fuit_init();
 	game->highscore = 0; //TODO maybe load this in from a file..?
 	game->currentLevel = 1;
+	game->frightenedThisLevel = 0;
+	game->currentlyFrightened = 0;
+	game->frightened = false;
 
 	//invalidate the state so it doesn't effect the enter_state function
 	game->gameState = -1;

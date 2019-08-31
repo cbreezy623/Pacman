@@ -43,6 +43,7 @@ typedef struct
 	bool frightened;
 	int frightenedThisLevel; //used subtracting frames while frightened
 	int currentlyFrightened;
+	int deathsThisLevel;
 	unsigned int frightenedStart;
 	unsigned int gameFramesOffset;
 	CollisionType recentCollision;
