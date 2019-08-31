@@ -429,15 +429,38 @@ static void normal_ghost_movement(Ghost *g, PacmanGame *game){
 
 	//these values should be updated to more accurately reflect the time ghosts
 	//spend in the pen
-	//printf("%u\n", frameDiff);
-	//printf("%d\n", game->frightenedThisLevel);
 	if(g->movementMode == InPen){
 		switch(g->ghostType){
-			case Blinky:{break;}
-			case Inky:{if(frameDiff < 7 * frameRate) return; break;}
-			case Clyde:{if(frameDiff < 15 * frameRate) return; break;}
-			case Pinky:{if(frameDiff < 2 * frameRate) return; break;}
-			default: break;
+			case Blinky:
+				g->movementMode = LeavingPen;
+				return;
+				break;
+			case Inky:
+				if(frameDiff < 7 * frameRate)
+					return;
+				else{
+					g->movementMode = LeavingPen;
+					return;
+				}
+				break;
+			case Clyde:
+				if(frameDiff < 15 * frameRate)
+					return;
+				else{
+					g->movementMode = LeavingPen;
+					return;
+				}
+				break;
+			case Pinky:
+				if(frameDiff < 2 * frameRate)
+					return;
+				else{
+					g->movementMode = LeavingPen;
+					return;
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -489,6 +512,9 @@ static void update_ghost_speed(Ghost *g, PacmanGame *game){
 	else if(g->movementMode == Eaten){
 		g->body.velocity = 200;
 	}
+	else if(g->movementMode == InPen){
+		g->body.velocity = 20;
+	}
 	else{
 		g->body.velocity = ghost_speed_fright(game->currentLevel);
 	}
@@ -502,6 +528,9 @@ static void process_ghosts(PacmanGame *game)
 	{
 		Ghost *g = &game->ghosts[i];
 		update_ghost_speed(g, game);
+
+		if(g->ghostType == Inky && g->movementMode == LeavingPen)
+			printf("%d %d %d %d %d\n", g->body.x, g->body.y, g->body.xOffset, g->body.yOffset, g->movementMode == LeavingPen);
 		
 		if(g->movementMode == Frightened || g->movementMode == Eaten){
 			if(frames_game() >= 60 * fright_time(game->currentLevel) + game->frightenedStart){
@@ -512,20 +541,23 @@ static void process_ghosts(PacmanGame *game)
 				game->currentlyFrightened = 0;
 			}
 		}
-		else{
+		else if(g->movementMode != LeavingPen){
 			update_ghost_movement(g, game);
 		}
 
 		if (g->movementMode == InPen)
 		{
-			//ghosts bob up and down - move in direction. If they hit a square, change direction
-			bool moved = move_ghost(&g->body);
-
-			if (moved && (g->body.y == 13 || g->body.y == 15))
-			{
-				g->body.nextDir = g->body.curDir;
-				g->body.curDir = dir_opposite(g->body.curDir);
+			move_ghost(&g->body);
+			if(g->body.y < 14){
+				g->body.nextDir = Down;
+				g->body.curDir = Down;
 			}
+			else if(g->body.y > 14){
+				g->body.nextDir = Up;
+				g->body.curDir = Up;
+			}
+
+			g->body.xOffset = -8;
 
 			continue;
 		}
@@ -537,23 +569,46 @@ static void process_ghosts(PacmanGame *game)
 			//then more em up out the gate
 			//when they are out of the gate, set them to be in normal chase mode then set them off on their way
 
+			if(g->ghostType == Inky && g->movementMode == LeavingPen)
+			printf("%d %d %d %d %d\n", g->body.x, g->body.y, g->body.xOffset, g->body.yOffset, g->movementMode == LeavingPen);
+			//ghost has left the pen
 			if(g->body.y == 11){
 				update_ghost_movement(g, game);
 				continue;
 			}
 
-			if(g->body.x > 14){
-				g->body.curDir = Left;
-				g->body.nextDir = Left;
+			switch(g->ghostType){
+				case Pinky:
+					g->body.curDir = Up;
+					g->body.nextDir = Up;
+					break;
+				case Inky:
+					if(g->body.x < 14 || (g->body.x == 14 && g->body.xOffset < -8)){
+						g->body.curDir = Right;
+						g->body.nextDir = Right;
+					}
+					else{
+						g->body.curDir = Up;
+						g->body.nextDir = Up;
+					}
+					break;
+				case Clyde:
+					if(g->body.x > 14 || (g->body.x == 14 && g->body.xOffset > -8)){
+						g->body.curDir = Left;
+						g->body.nextDir = Left;
+					}
+					else{
+						g->body.curDir = Up;
+						g->body.nextDir = Up;
+					}
+					break;
+				default:
+					g->body.curDir = Up;
+					g->body.nextDir = Up;
+					break;
 			}
-			else if(g->body.x < 14){
-				g->body.curDir = Right;
-				g->body.nextDir = Right;
-			}
-			else if(g->body.x == 14){
-				g->body.curDir = Up;
-				g->body.nextDir = Up;
-			}
+			move_ghost(&g->body);
+			continue;
 		}
 
 		if (g->movementMode == Eaten){
