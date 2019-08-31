@@ -9,6 +9,8 @@ typedef struct
 {
 	int x;
 	int y;
+	int xPrev;
+	int yPrev;
 	int xOffset;
 	int yOffset;
 	Direction curDir;    //current direction we are moving

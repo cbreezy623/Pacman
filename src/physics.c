@@ -1,10 +1,16 @@
 #include "physics.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 bool collides(PhysicsBody *body1, PhysicsBody *body2)
 {
-	return body1->x == body2->x && body1->y == body2->y;
+	//takes care of an edge case where the bodies never have the same coordinates
+	//but a collision should occur
+	bool positionSwap = body1->xPrev == body2->x && body1->yPrev == body2->y &&
+		body2->xPrev == body1->x && body2->yPrev == body1->y;
+
+	return (body1->x == body2->x && body1->y == body2->y) || positionSwap;
 }
 
 bool collides_obj(PhysicsBody *body, int otherX, int otherY)
@@ -40,6 +46,9 @@ MovementResult move_ghost(PhysicsBody *body)
 
 	int divide = velPixValue / MULT_VALUE;
 	int remain = velPixValue % MULT_VALUE;
+
+	body->xPrev = body->x;
+	body->yPrev = body->y;
 
 	//add any new speed to current pixel position (only useful for velocity >= 80)
 	body->xOffset += divide * xDir;
@@ -171,6 +180,9 @@ bool move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext)
 	int divide = velPixValue / MULT_VALUE;
 	int remain = velPixValue % MULT_VALUE;
 
+	body->xPrev = body->x;
+	body->yPrev = body->y;
+	
 	//add any new speed to current pixel position (only useful for velocity >= 80)
 	body->xOffset += divide * xDir;
 	body->yOffset += divide * yDir;
