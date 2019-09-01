@@ -529,8 +529,8 @@ static void process_ghosts(PacmanGame *game)
 		Ghost *g = &game->ghosts[i];
 		update_ghost_speed(g, game);
 
-		if(g->ghostType == Inky && g->movementMode == LeavingPen)
-			printf("%d %d %d %d %d\n", g->body.x, g->body.y, g->body.xOffset, g->body.yOffset, g->movementMode == LeavingPen);
+		//if(g->ghostType == Inky && g->movementMode == LeavingPen)
+			//printf("%d %d %d %d %d\n", g->body.x, g->body.y, g->body.xOffset, g->body.yOffset, g->movementMode == LeavingPen);
 		
 		if(g->movementMode == Frightened || g->movementMode == Eaten){
 			if(frames_game() >= 60 * fright_time(game->currentLevel) + game->frightenedStart){
@@ -569,10 +569,10 @@ static void process_ghosts(PacmanGame *game)
 			//then more em up out the gate
 			//when they are out of the gate, set them to be in normal chase mode then set them off on their way
 
-			if(g->ghostType == Inky && g->movementMode == LeavingPen)
-			printf("%d %d %d %d %d\n", g->body.x, g->body.y, g->body.xOffset, g->body.yOffset, g->movementMode == LeavingPen);
+			//if(g->ghostType == Inky && g->movementMode == LeavingPen)
+				//printf("%d %d %d %d %d\n", g->body.x, g->body.y, g->body.xOffset, g->body.yOffset, g->movementMode == LeavingPen);
 			//ghost has left the pen
-			if(g->body.y == 11){
+			if(g->body.y < 13 && g->body.yOffset < 1){
 				update_ghost_movement(g, game);
 				continue;
 			}
@@ -581,33 +581,62 @@ static void process_ghosts(PacmanGame *game)
 				case Pinky:
 					g->body.curDir = Up;
 					g->body.nextDir = Up;
+					move_ghost(&g->body);
+					g->body.xOffset = -8;
 					break;
 				case Inky:
-					if(g->body.x < 14 || (g->body.x == 14 && g->body.xOffset < -8)){
+					if(g->body.y > 14){
+						g->body.curDir = Up;
+						g->body.nextDir = Up;
+						move_ghost(&g->body);
+					}
+					else if(g->body.y < 14 && g->body.x < 14){
+						g->body.curDir = Down;
+						g->body.nextDir = Down;
+						move_ghost(&g->body);
+					}
+					else if(g->body.x < 14){
 						g->body.curDir = Right;
 						g->body.nextDir = Right;
+						move_ghost(&g->body);
 					}
 					else{
 						g->body.curDir = Up;
 						g->body.nextDir = Up;
+						move_ghost(&g->body);
+						g->body.xOffset = -8;
 					}
+
 					break;
 				case Clyde:
-					if(g->body.x > 14 || (g->body.x == 14 && g->body.xOffset > -8)){
+					if(g->body.y > 14){
+						g->body.curDir = Up;
+						g->body.nextDir = Up;
+						move_ghost(&g->body);
+					}
+					else if(g->body.y < 14 && g->body.x > 14){
+						g->body.curDir = Down;
+						g->body.nextDir = Down;
+						move_ghost(&g->body);
+					}
+					else if(g->body.x > 14 || (g->body.x == 14 && g->body.xOffset > -8)){
 						g->body.curDir = Left;
 						g->body.nextDir = Left;
+						move_ghost(&g->body);
 					}
 					else{
 						g->body.curDir = Up;
 						g->body.nextDir = Up;
+					    move_ghost(&g->body);
+						g->body.xOffset = -8;
 					}
 					break;
 				default:
 					g->body.curDir = Up;
 					g->body.nextDir = Up;
+					move_ghost(&g->body);
 					break;
 			}
-			move_ghost(&g->body);
 			continue;
 		}
 
