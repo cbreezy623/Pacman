@@ -182,6 +182,8 @@ void game_render(PacmanGame *game)
 			if (game->gameFruit1.eaten && ticks_game() - game->gameFruit1.eatenAt < 2000) draw_fruit_pts(&game->gameFruit1);
 			if (game->gameFruit2.eaten && ticks_game() - game->gameFruit2.eatenAt < 2000) draw_fruit_pts(&game->gameFruit2);
 
+			if (game->frightened && frames_game() - game->eatenInfo.eatenFrame < 120) draw_ghost_pts(&game->eatenInfo);
+
 			draw_pacman(&game->pacman);
 
 			for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
@@ -782,6 +784,18 @@ static void process_pellets(PacmanGame *game)
 	//maybe next time, poor pacman
 }
 
+static int ghost_points(PacmanGame *game){
+	switch(game->currentlyFrightened){
+		case 4: {return 200; break;}
+		case 3: {return 400; break;}
+		case 2: {return 800; break;}
+		case 1: {return 1600; break;}
+		default: break;
+	}
+
+	return 0;
+}
+
 static bool check_pacghost_collision(PacmanGame *game)
 {
 	for (int i = 0; i < 4; i++)
@@ -792,7 +806,9 @@ static bool check_pacghost_collision(PacmanGame *game)
 			if(g->movementMode == Frightened){
 				game->recentCollision = FrightenedCollision;
 				g->movementMode = Eaten;
-				game->pacman.score += 200;
+				int points = ghost_points(game);
+				game->pacman.score += points;
+				game->eatenInfo = (EatenInfo) {g->body.x, g->body.y, 4 - game->currentlyFrightened, frames_game()};
 				game->currentlyFrightened--;
 			}
 			else if(g->movementMode == Eaten)

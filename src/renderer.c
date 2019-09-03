@@ -430,6 +430,12 @@ void draw_fruit_pts(GameFruit *gameFruit)
 	draw_image_coord(image, gameFruit->x, gameFruit->y + 3);
 }
 
+void draw_ghost_pts(EatenInfo *info){
+	SDL_Surface *image = get_ghost_score_image(info->lastEatenPtsIdx);
+
+	draw_image_coord(image, info->lastEatenX, info->lastEatenY + 3);
+}
+
 //
 //
 // Board rendering

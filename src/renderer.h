@@ -8,6 +8,7 @@
 #include "pacman.h"
 #include "pellet.h"
 #include "text.h"
+#include "game.h"
 
 //Holds data relating to a single rendered ghost-row.
 typedef struct
@@ -94,6 +95,7 @@ void draw_ghost(Ghost *ghost);
 //
 
 void draw_fruit_pts(GameFruit *gameFruit);
+void draw_ghost_pts(EatenInfo *info);
 
 //
 // Board rendering

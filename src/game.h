@@ -17,6 +17,13 @@ typedef enum
 	GameoverState
 } GameState;
 
+typedef struct{
+	int lastEatenX;
+	int lastEatenY;
+	int lastEatenPtsIdx;
+	unsigned int eatenFrame;
+} EatenInfo;
+
 //what you do in current state
 
 //what causes you to transition from state A -> state B
@@ -47,6 +54,7 @@ typedef struct
 	unsigned int frightenedStart;
 	unsigned int gameFramesOffset;
 	CollisionType recentCollision;
+	EatenInfo eatenInfo;
 } PacmanGame;
 
 //Updates the game 1 tick, or 1/60th of a second.
